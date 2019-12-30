@@ -18,6 +18,7 @@ import * as homeController from "./controllers/home";
 import * as userController from "./controllers/user";
 import * as apiController from "./controllers/api";
 import * as contactController from "./controllers/contact";
+import * as apartmentController from "./controllers/apartment";
 
 
 // API keys and Passport configuration
@@ -103,7 +104,9 @@ app.get("/account", passportConfig.isAuthenticated, userController.getAccount);
 app.post("/account/profile", passportConfig.isAuthenticated, userController.postUpdateProfile);
 app.post("/account/password", passportConfig.isAuthenticated, userController.postUpdatePassword);
 app.post("/account/delete", passportConfig.isAuthenticated, userController.postDeleteAccount);
-app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink);
+app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink); // This can be deleted
+app.get("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.getCreateApartment);
+app.post("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.postCreateApartment);
 
 /**
  * API examples routes.

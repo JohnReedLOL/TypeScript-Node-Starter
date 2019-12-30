@@ -1,0 +1,70 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Create An Apartment Listing
+    hr
+
+  form.form-horizontal(action='/account/list-apartment', method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='apartment-number') Apartment Number
+      .col-sm-7
+        input.form-control(type='apartment-number', name='apartment-number', id='apartment-number', value=apartment.apartmentNumber)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additional-information') Additional Information (contact information, additional fees, etc)
+      .col-sm-7
+        textarea#additional-information.additional-information(style='min-width: 100%', rows='5')
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='january-price') January Price
+      .col-sm-7
+        input.form-control(type='january-price', name='january-price', id='january-price', value=apartment.januaryPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='february-price') February Price
+      .col-sm-7
+        input.form-control(type='february-price', name='february-price', id='february-price', value=apartment.februaryPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='march-price') March Price
+      .col-sm-7
+        input.form-control(type='march-price', name='march-price', id='march-price', value=apartment.marchPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='april-price') April Price
+      .col-sm-7
+        input.form-control(type='april-price', name='april-price', id='april-price', value=apartment.aprilPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='may-price') May Price
+      .col-sm-7
+        input.form-control(type='may-price', name='may-price', id='may-price', value=apartment.mayPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='june-price') June Price
+      .col-sm-7
+        input.form-control(type='june-price', name='june-price', id='june-price', value=apartment.junePrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='july-price') July Price
+      .col-sm-7
+        input.form-control(type='july-price', name='july-price', id='july-price', value=apartment.julyPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='august-price') August Price
+      .col-sm-7
+        input.form-control(type='august-price', name='august-price', id='august-price', value=apartment.augustPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='september-price') September Price
+      .col-sm-7
+        input.form-control(type='september-price', name='september-price', id='september-price', value=apartment.septemberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='october-price') October Price
+      .col-sm-7
+        input.form-control(type='october-price', name='october-price', id='october-price', value=apartment.octoberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='november-price') November Price
+      .col-sm-7
+        input.form-control(type='november-price', name='november-price', id='november-price', value=apartment.novemberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='december-price') December Price
+      .col-sm-7
+        input.form-control(type='december-price', name='december-price', id='december-price', value=apartment.decemberPrice)
+    .form-group.row.justify-content-md-center
+      .col-sm-4
+        button.btn.btn.btn-primary(type='submit')
+          i.fa.fa-pencil
+          | Create Apartment
