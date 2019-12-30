@@ -2,7 +2,7 @@ import async from "async";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
-import { User, UserDocument, AuthToken } from "../models/User";
+import { Landlord, LandlordDocument, AuthToken } from "../models/Landlord";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
@@ -39,7 +39,7 @@ export const postLogin = async (req: Request, res: Response, next: NextFunction)
         return res.redirect("/login");
     }
 
-    passport.authenticate("local", (err: Error, user: UserDocument, info: IVerifyOptions) => {
+    passport.authenticate("local", (err: Error, user: LandlordDocument, info: IVerifyOptions) => {
         if (err) { return next(err); }
         if (!user) {
             req.flash("errors", {msg: info.message});
@@ -93,12 +93,12 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
         return res.redirect("/signup");
     }
 
-    const user = new User({
+    const user = new Landlord({
         email: req.body.email,
         password: req.body.password
     });
 
-    User.findOne({ email: req.body.email }, (err, existingUser) => {
+    Landlord.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err); }
         if (existingUser) {
             req.flash("errors", { msg: "Account with that email address already exists." });
@@ -142,8 +142,8 @@ export const postUpdateProfile = async (req: Request, res: Response, next: NextF
         return res.redirect("/account");
     }
 
-    const user = req.user as UserDocument;
-    User.findById(user.id, (err, user: UserDocument) => {
+    const user = req.user as LandlordDocument;
+    Landlord.findById(user.id, (err, user: LandlordDocument) => {
         if (err) { return next(err); }
         user.email = req.body.email || "";
         user.profile.name = req.body.name || "";
@@ -179,8 +179,8 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
         return res.redirect("/account");
     }
 
-    const user = req.user as UserDocument;
-    User.findById(user.id, (err, user: UserDocument) => {
+    const user = req.user as LandlordDocument;
+    Landlord.findById(user.id, (err, user: LandlordDocument) => {
         if (err) { return next(err); }
         user.password = req.body.password;
         user.save((err: WriteError) => {
@@ -196,8 +196,8 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
  * Delete user account.
  */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
-    const user = req.user as UserDocument;
-    User.remove({ _id: user.id }, (err) => {
+    const user = req.user as LandlordDocument;
+    Landlord.remove({ _id: user.id }, (err) => {
         if (err) { return next(err); }
         req.logout();
         req.flash("info", { msg: "Your account has been deleted." });
@@ -211,8 +211,8 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
  */
 export const getOauthUnlink = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.params.provider;
-    const user = req.user as UserDocument;
-    User.findById(user.id, (err, user: any) => {
+    const user = req.user as LandlordDocument;
+    Landlord.findById(user.id, (err, user: any) => {
         if (err) { return next(err); }
         user[provider] = undefined;
         user.tokens = user.tokens.filter((token: AuthToken) => token.kind !== provider);
@@ -232,7 +232,7 @@ export const getReset = (req: Request, res: Response, next: NextFunction) => {
     if (req.isAuthenticated()) {
         return res.redirect("/");
     }
-    User
+    Landlord
         .findOne({ passwordResetToken: req.params.token })
         .where("passwordResetExpires").gt(Date.now())
         .exec((err, user) => {
@@ -264,7 +264,7 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
 
     async.waterfall([
         function resetPassword(done: Function) {
-            User
+            Landlord
                 .findOne({ passwordResetToken: req.params.token })
                 .where("passwordResetExpires").gt(Date.now())
                 .exec((err, user: any) => {
@@ -284,7 +284,7 @@ export const postReset = async (req: Request, res: Response, next: NextFunction)
                     });
                 });
         },
-        function sendResetPasswordEmail(user: UserDocument, done: Function) {
+        function sendResetPasswordEmail(user: LandlordDocument, done: Function) {
             const transporter = nodemailer.createTransport({
                 service: "SendGrid",
                 auth: {
@@ -346,7 +346,7 @@ export const postForgot = async (req: Request, res: Response, next: NextFunction
             });
         },
         function setRandomToken(token: AuthToken, done: Function) {
-            User.findOne({ email: req.body.email }, (err, user: any) => {
+            Landlord.findOne({ email: req.body.email }, (err, user: any) => {
                 if (err) { return done(err); }
                 if (!user) {
                     req.flash("errors", { msg: "Account with that email address does not exist." });
@@ -359,7 +359,7 @@ export const postForgot = async (req: Request, res: Response, next: NextFunction
                 });
             });
         },
-        function sendForgotPasswordEmail(token: AuthToken, user: UserDocument, done: Function) {
+        function sendForgotPasswordEmail(token: AuthToken, user: LandlordDocument, done: Function) {
             const transporter = nodemailer.createTransport({
                 service: "SendGrid",
                 auth: {

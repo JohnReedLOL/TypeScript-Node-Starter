@@ -3,7 +3,7 @@ import passportLocal from "passport-local";
 import _ from "lodash";
 
 // import { User, UserType } from '../models/User';
-import { User, UserDocument } from "../models/User";
+import { Landlord, LandlordDocument } from "../models/Landlord";
 import { Request, Response, NextFunction } from "express";
 
 const LocalStrategy = passportLocal.Strategy;
@@ -13,7 +13,7 @@ passport.serializeUser<any, any>((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-    User.findById(id, (err, user) => {
+    Landlord.findById(id, (err, user) => {
         done(err, user);
     });
 });
@@ -23,7 +23,7 @@ passport.deserializeUser((id, done) => {
  * Sign in using Email and Password.
  */
 passport.use(new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-    User.findOne({ email: email.toLowerCase() }, (err, user: any) => {
+    Landlord.findOne({ email: email.toLowerCase() }, (err, user: any) => {
         if (err) { return done(err); }
         if (!user) {
             return done(undefined, false, { message: `Email ${email} not found.` });
@@ -70,7 +70,7 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
 export const isAuthorized = (req: Request, res: Response, next: NextFunction) => {
     const provider = req.path.split("/").slice(-1)[0];
 
-    const user = req.user as UserDocument;
+    const user = req.user as LandlordDocument;
     if (_.find(user.tokens, { kind: provider })) {
         next();
     } else {
