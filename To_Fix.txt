@@ -1,7 +1,0 @@
-1. Fix this hardcoding in app.ts which was introduced to force https and allow Facebook login:
-app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "https://sea-air-towers.herokuapp.com/login" }), (req, res) => {
-    // res.redirect(req.session.returnTo || "/");
-    res.redirect("https://sea-air-towers.herokuapp.com/");
-});
-
-2. Fix the exposed passwords in .env.example and reset Facebook secret in same file.

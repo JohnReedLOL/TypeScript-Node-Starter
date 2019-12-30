@@ -115,13 +115,8 @@ app.get("/api/facebook", passportConfig.isAuthenticated, passportConfig.isAuthor
  * OAuth authentication routes. (Sign in)
  */
 app.get("/auth/facebook", passport.authenticate("facebook", { scope: ["email", "public_profile"] }));
-// app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
-//     res.redirect(req.session.returnTo || "/");
-// });
-// Use https for redirect to get rid of: "FacebookAuthorizationError: Insecure Login Blocked: You can't get an access token or log in to this app from an insecure page. Try re-loading the page as https://"
-app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "https://sea-air-towers.herokuapp.com/login" }), (req, res) => {
-    // res.redirect(req.session.returnTo || "/");
-    res.redirect("https://sea-air-towers.herokuapp.com/");
+app.get("/auth/facebook/callback", passport.authenticate("facebook", { failureRedirect: "/login" }), (req, res) => {
+    res.redirect(req.session.returnTo || "/");
 });
 
 export default app;
