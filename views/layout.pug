@@ -1,11 +1,21 @@
 doctype html
 html(lang='')
   head
+    // Global site tag (gtag.js) - Google Analytics
+    script(async='', src='https://www.googletagmanager.com/gtag/js?id=UA-155123618-1')
+    script.
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-155123618-1');
+    // End of Google Analytics
+
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    title #{title} - Hackathon Starter
-    meta(name='description', content='')
+    title #{Sea Air Towers Vacation Apartment Rentals}
+    meta(name='description', content='Find or list a Sea Air Towers vacation rental apartment in Hollywood Florida')
+    meta(name='keywords', content='Real Estate, Condominium, Apartment, Rental, Rentals, Vacation Rental, Hollywood Florida Vacation Rental, Hollywood Beach Vacation Rentals, Hollywood Beach Rental, Hollywood Beach Apartments')
     meta(name='theme-color' content='#4DA5F4')
     meta(name='csrf-token', content=_csrf)
     link(rel='shortcut icon', href='/images/favicon.png')
@@ -26,7 +36,7 @@ html(lang='')
     script(src='/js/main.js')
 
     //- Google Analytics: change UA-38177297-2 to be your site's ID
-    script.
-      window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
-      ga('create','UA-38177297-2','auto');ga('send','pageview')
-    script(src='https://www.google-analytics.com/analytics.js' async defer)
+    // script.
+    //   window.ga=function(){ga.q.push(arguments)};ga.q=[];ga.l=+new Date;
+    //   ga('create','UA-155123618-1','auto');ga('send','pageview')
+    // script(src='https://www.google-analytics.com/analytics.js' async defer)
