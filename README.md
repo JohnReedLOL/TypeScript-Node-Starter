@@ -521,13 +521,11 @@ In that file you'll find two sections:
 | express-flash                    | Provides flash messages for Express.                                   |
 | express-session                 | Express 4 middleware.                                                 |
 | express-validator               | Easy form validation for Express.                                     |
-| fbgraph                         | Facebook Graph API library.                                           |
 | lodash                          | General utility library.                                              |
 | lusca                           | CSRF middleware.                                                      |
 | mongoose                        | MongoDB ODM.                                                          |
 | nodemailer                      | Node.js library for sending emails.                                   |
 | passport                        | Simple and elegant authentication library for node.js                 |
-| passport-facebook               | Sign-in with Facebook plugin.                                         |
 | passport-local                  | Sign-in with Username and Password plugin.                            |
 | pug (jade)                      | Template engine for Express.                                          |
 | request                         | Simplified HTTP request library.                                       |

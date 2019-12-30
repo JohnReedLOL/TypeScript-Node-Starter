@@ -1,0 +1,3 @@
+1. Fix the exposed passwords in .env.example.
+
+2. Fix the database to get rid of Facebook (non-urgent).
