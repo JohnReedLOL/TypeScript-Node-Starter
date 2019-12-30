@@ -5,8 +5,10 @@ import { check, validationResult } from "express-validator";
 const transporter = nodemailer.createTransport({
     service: "SendGrid",
     auth: {
-        user: process.env.SENDGRID_USER,
-        pass: process.env.SENDGRID_PASSWORD
+        // user: process.env.SENDGRID_USER,
+        user: process.env["SENDGRID_USER"],
+        // pass: process.env.SENDGRID_PASSWORD
+        pass: process.env["SENDGRID_PASSWORD"]
     }
 });
 
@@ -37,9 +39,9 @@ export const postContact = async (req: Request, res: Response) => {
     }
 
     const mailOptions = {
-        to: "your@email.com",
+        to: "JohnMichaelReedFAS@gmail.com",
         from: `${req.body.name} <${req.body.email}>`,
-        subject: "Contact Form",
+        subject: "Sea Air Towers Contact",
         text: req.body.message
     };
 
