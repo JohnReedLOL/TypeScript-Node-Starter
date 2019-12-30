@@ -32,7 +32,7 @@ export const getCreateApartment = (req: Request, res: Response) => {
         apartment: {
             apartmentNumber: 0,
             additionalInformation: "",
-            januaryPrice: 0,
+            januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
             februaryPrice: 0,
             marchPrice: 0,
             aprilPrice: 0,
@@ -53,12 +53,12 @@ export const getCreateApartment = (req: Request, res: Response) => {
  * Create landlord's apartment.
  */
 export const postCreateApartment = async (req: Request, res: Response, next: NextFunction) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req); // user local variable has .apartments: CoreMongoseArray(0)
 
-    if (!errors.isEmpty()) {
+    if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
         req.flash("errors", errors.array());
         return res.redirect("account/list-apartment");
-    }
+    } // body.additional-information: "AdditionInfoRow1 111\r\nAdditionInfoRow2 222"
 
     const user = req.user as LandlordDocument;
     Landlord.findById(user.id, (err, user: LandlordDocument) => {
