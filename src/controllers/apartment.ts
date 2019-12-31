@@ -118,13 +118,10 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
             return next(err);
         }
         // In addition to saving the apartment to the database, you must also update the Landlord with the link to their apartment.
-        Landlord.findById(user.id, (err, user: LandlordDocument) => {
+        const newlyListedAppartment = {apartmentNumber: apartment.apartmentNumber};
+        user.apartments.push(newlyListedAppartment);
+        user.save((err: WriteError) => {
             if (err) { return next(err); }
-            const newlyListedAppartment = {apartmentNumber: apartment.apartmentNumber};
-            user.apartments.push(newlyListedAppartment);
-            user.save((err: WriteError) => {
-                if (err) { return next(err); }
-            });
         });
         // Done updating Landlord
         req.flash("success", { msg: "Apartment " + apartment.apartmentNumber + " has been listed. Try pulling up this apartment or updating its availability." });
