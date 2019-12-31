@@ -30,7 +30,7 @@ export interface AuthToken {
     kind: string;
 }
 
-export interface Apartment {
+export interface Apartment { // Note this overlaps with Apartment in Apartments.ts
     apartmentNumber: number;
 }
 

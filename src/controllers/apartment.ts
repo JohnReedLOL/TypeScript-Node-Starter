@@ -110,13 +110,23 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     apartment.decemberPrice = parseFloat(req.body.decemberPrice);
     apartment.additionalInformation = req.body.additionalInformation;
     apartment.save((err: WriteError) => {
-        if (err) { // If apartment number already exists err = MongoError: E11000 duplicate key error collection: test.apartments index: apartmentNumber_1 dup key: { : 8 }
-            if (err.code === 11000) { // This path works
+        if (err) {
+            if (err.code === 11000) { // If apartment number already exists err = MongoError: E11000 duplicate key error collection: test.apartments index: apartmentNumber_1 dup key: { : 8 }
                 req.flash("errors", { msg: "The apartment number you have entered already exists in the database." });
                 return res.redirect("/account/list-apartment");
             }
             return next(err);
         }
+        // In addition to saving the apartment to the database, you must also update the Landlord with the link to their apartment.
+        Landlord.findById(user.id, (err, user: LandlordDocument) => {
+            if (err) { return next(err); }
+            const newlyListedAppartment = {apartmentNumber: apartment.apartmentNumber};
+            user.apartments.push(newlyListedAppartment);
+            user.save((err: WriteError) => {
+                if (err) { return next(err); }
+            });
+        });
+        // Done updating Landlord
         req.flash("success", { msg: "Apartment " + apartment.apartmentNumber + " has been listed. Try pulling up this apartment or updating its availability." });
         res.redirect("/");
     });
