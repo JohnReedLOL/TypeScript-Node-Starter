@@ -12,6 +12,14 @@ block content
       .col-sm-7
         input.form-control(type='apartmentNumber', name='apartmentNumber', id='apartmentNumber', value=apartment.apartmentNumber)
     .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBedrooms') Number of Bedrooms
+      .col-sm-7
+        input.form-control(type='apartmentNumber', name='numBedrooms', id='numBedrooms', value=apartment.numBedrooms)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBathrooms') Number of Bathrooms
+      .col-sm-7
+        input.form-control(type='apartmentNumber', name='numBathrooms', id='numBathrooms', value=apartment.numBathrooms)
+    .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additionalInformation') Additional Information (contact information, additional fees, etc)
       .col-sm-7
         textarea.form-control(type='additionalInformation', name='additionalInformation', id='additionalInformation', style='min-width: 100%', rows='5', value=apartment.additionalInformation)

@@ -5,7 +5,10 @@ export type ApartmentDocument = mongoose.Document & {
     landlordEmail: string;
 
     // Only store if apartment is booked for a specific date. Otherwise, not booked.
-    eveningsBooked: Date[];
+    // eveningsBooked: Date[]; // Moved this to ApartmentBookings
+
+    numBedrooms: number;
+    numBathrooms: number;
 
     // Only store the price per month, not per day. Landlords can negotiate for specific days.
     januaryPrice: number;
@@ -28,7 +31,9 @@ export type ApartmentDocument = mongoose.Document & {
 const apartmentSchema = new mongoose.Schema({
     apartmentNumber: { type: Number, unique: true },
     landlordEmail: String,
-    eveningsBooked: Array,
+
+    numBedrooms: Number,
+    numBathrooms: Number,
 
     // Only store the price per month, not per day. Landlords can negotiate for specific days.
     januaryPrice: Number,

@@ -35,9 +35,6 @@ export const getRentApartmentByLandlord = (req: Request, res: Response, next: Ne
             title: "Get Apartments By Landlord"
         });
     } else {
-        // res.writeHead(200, {"Content-Type": "text/plain"});
-        // res.end(landlord + "\n");
-        // executes, passing results to callback
         Apartment.find({ landlordEmail: landlord}, (err, apartments: any) => {
             if (err) { return next(err); }
             res.writeHead(200, {"Content-Type": "text/plain"});
@@ -55,6 +52,8 @@ export const getCreateApartment = (req: Request, res: Response) => {
         title: "List Apartment",
         apartment: {
             apartmentNumber: 0,
+            numBedrooms: 0,
+            numBathrooms: 0,
             additionalInformation: "",
             januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
             februaryPrice: 0,
@@ -78,6 +77,8 @@ export const getCreateApartment = (req: Request, res: Response) => {
  */
 export const postCreateApartment = async (req: Request, res: Response, next: NextFunction) => {
     await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
+    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
+    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
     await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
     await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
     await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
@@ -100,7 +101,8 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     const apartment = new Apartment({
         apartmentNumber: 0,
         landlordEmail: "",
-        eveningsBooked: [],
+        numBedrooms: 0,
+        numBathrooms: 0,
         januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
         februaryPrice: 0,
         marchPrice: 0,
@@ -119,6 +121,8 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     const user = req.user as LandlordDocument;
     apartment.apartmentNumber = parseInt(req.body.apartmentNumber, 10);
     apartment.landlordEmail = user.email;
+    apartment.numBedrooms = parseFloat(req.body.numBedrooms);
+    apartment.numBathrooms = parseFloat(req.body.numBathrooms);
     apartment.januaryPrice = parseFloat(req.body.januaryPrice);
     apartment.februaryPrice = parseFloat(req.body.februaryPrice);
     apartment.marchPrice = parseFloat(req.body.marchPrice);
