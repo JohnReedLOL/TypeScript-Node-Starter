@@ -107,6 +107,7 @@ app.post("/account/delete", passportConfig.isAuthenticated, userController.postD
 app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink); // This can be deleted
 app.get("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.getCreateApartment);
 app.post("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.postCreateApartment);
+app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLandlord);
 
 /**
  * API examples routes.

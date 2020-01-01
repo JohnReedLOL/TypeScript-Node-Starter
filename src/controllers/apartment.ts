@@ -10,6 +10,7 @@ import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
 import { check, sanitize, validationResult } from "express-validator";
 import "../config/passport";
+import { reduce } from "bluebird";
 
 /*
 app.get('/', function (req, res) {
@@ -22,6 +23,28 @@ html
 body
    h1= message
 */
+
+/**
+ * GET /rent-apartment-by-landlord
+ * Form to fill in the landlord. If landlord is filled, list the apartments.
+ */
+export const getRentApartmentByLandlord = (req: Request, res: Response, next: NextFunction) => {
+    const landlord = req.query.landlord; // email address of landlord
+    if(landlord == undefined) {
+        res.render("apartment/getByLandlord", {
+            title: "Get Apartments By Landlord"
+        });
+    } else {
+        // res.writeHead(200, {"Content-Type": "text/plain"});
+        // res.end(landlord + "\n");
+        // executes, passing results to callback
+        Apartment.find({ landlordEmail: landlord}, (err, apartments: any) => {
+            if (err) { return next(err); }
+            res.writeHead(200, {"Content-Type": "text/plain"});
+            res.end("Apartments owned by this landlord: \n" + apartments + "\n");
+        });
+    }
+};
 
 /**
  * GET /account/list-apartment
@@ -119,6 +142,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
         }
         // In addition to saving the apartment to the database, you must also update the Landlord with the link to their apartment.
         const newlyListedAppartment = {apartmentNumber: apartment.apartmentNumber};
+        // Note that I do not know if I have to look up user in the database and use that or if it's okay to just use req.user
         user.apartments.push(newlyListedAppartment);
         user.save((err: WriteError) => {
             if (err) { return next(err); }
