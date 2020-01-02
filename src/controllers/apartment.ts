@@ -12,6 +12,107 @@ import { check, sanitize, validationResult } from "express-validator";
 import "../config/passport";
 import { reduce } from "bluebird";
 
+/**
+ * POST /account/edit-listing/:apartmentNumber
+ * Chose between updating the info for an apartment or updating its availability
+ */
+export const postUpdateApartmentListing = async (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
+    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
+    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
+    await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
+    await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
+    await check("aprilPrice", "aprilPrice must be a number").isNumeric().run(req);
+    await check("mayPrice", "mayPrice must be a number").isNumeric().run(req);
+    await check("junePrice", "junePrice must be a number").isNumeric().run(req);
+    await check("julyPrice", "julyPrice must be a number").isNumeric().run(req);
+    await check("augustPrice", "augustPrice must be a number").isNumeric().run(req);
+    await check("septemberPrice", "septemberPrice must be a number").isNumeric().run(req);
+    await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
+    await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
+    await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
+    const errors = validationResult(req); // user local variable has .apartments: CoreMongoseArray(0)
+
+    if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
+        req.flash("errors", errors.array());
+        return res.redirect("account/edit-listing/" + apartmentNumber);
+    } // body.additional-information: "AdditionInfoRow1 111\r\nAdditionInfoRow2 222"
+
+    const filter = { apartmentNumber: parseInt(req.body.apartmentNumber, 10) };
+    const user = req.user as LandlordDocument;
+    const update = { 
+        landlordEmail: user.email,
+        numBedrooms: parseFloat(req.body.numBedrooms),
+        numBathrooms: parseFloat(req.body.numBathrooms),
+        januaryPrice: parseFloat(req.body.januaryPrice),
+        februaryPrice: parseFloat(req.body.februaryPrice),
+        marchPrice: parseFloat(req.body.marchPrice),
+        aprilPrice: parseFloat(req.body.aprilPrice),
+        mayPrice: parseFloat(req.body.mayPrice),
+        junePrice: parseFloat(req.body.junePrice),
+        julyPrice: parseFloat(req.body.julyPrice),
+        augustPrice: parseFloat(req.body.augustPrice),
+        septemberPrice: parseFloat(req.body.septemberPrice),
+        octoberPrice: parseFloat(req.body.octoberPrice),
+        novemberPrice: parseFloat(req.body.novemberPrice),
+        decemberPrice: parseFloat(req.body.decemberPrice),
+        additionalInformation: req.body.additionalInformation
+    };
+
+    await Apartment.findOneAndUpdate(filter, update);
+    return res.redirect("/account/update-listing");
+};
+
+/**
+ * GET /account/edit-listing/:apartmentNumber
+ * Chose between updating the info for an apartment or updating its availability
+ */
+export const getUpdateApartmentListing = (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
+        if (err) { return next(err); }
+        res.render("apartment/update", {
+            title: "Update Listing For Apartment #" + apartmentNumber,
+            apartmentNumber: apartmentNumber,
+            apartment: apartments[0]
+        });
+    });  
+};
+
+/**
+ * GET /account/update-availability/:apartmentNumber
+ * Chose between updating the info for an apartment or updating its availability
+ */
+export const updateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+
+    
+};
+
+/**
+ * GET /account/update-listing
+ * Chose between updating the info for an apartment or updating its availability
+ */
+export const updateApartment = (req: Request, res: Response) => {
+    const apartmentNumber = req.query.listing;
+    if(apartmentNumber == undefined) {
+        res.render("apartment/pickApartmentToEdit", {
+            title: "Pick An Apartment Number To Edit",
+        });
+    } else {
+        res.render("apartment/editListingOrAvailability", {
+            title: "Update Listing Or Availability Of Apartment #" + apartmentNumber,
+            apartmentNumber: apartmentNumber
+        });
+    }
+};
+
+/**
+ * GET /apartment/:apartmentNumber
+ * Listing page for an apartment.
+ */
 export const getApartment = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
 

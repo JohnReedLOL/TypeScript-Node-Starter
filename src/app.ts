@@ -109,6 +109,10 @@ app.get("/account/list-apartment", passportConfig.isAuthenticated, apartmentCont
 app.post("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.postCreateApartment);
 app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLandlord);
 app.get("/apartment/:apartmentNumber", apartmentController.getApartment);
+app.get("/account/update-listing", passportConfig.isAuthenticated, apartmentController.updateApartment);
+app.get("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.updateApartmentAvailability);
+app.get("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.getUpdateApartmentListing);
+app.post("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentListing);
 
 /**
  * API examples routes.

@@ -1,0 +1,78 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 #{title}
+    hr
+
+  form.form-horizontal(action="/account/edit-listing/" + apartmentNumber, method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='apartmentNumber') Apartment Number
+      .col-sm-7
+        input.form-control(type='apartmentNumber', name='apartmentNumber', id='apartmentNumber', value=apartment.apartmentNumber)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBedrooms') Number of Bedrooms
+      .col-sm-7
+        input.form-control(type='apartmentNumber', name='numBedrooms', id='numBedrooms', value=apartment.numBedrooms)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBathrooms') Number of Bathrooms
+      .col-sm-7
+        input.form-control(type='apartmentNumber', name='numBathrooms', id='numBathrooms', value=apartment.numBathrooms)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additionalInformation') Additional Information (contact information, additional fees, etc)
+      .col-sm-7
+        input.form-control(type='additionalInformation', name='additionalInformation', id='additionalInformation', value=apartment.additionalInformation)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='januaryPrice') January Price
+      .col-sm-7
+        input.form-control(type='januaryPrice', name='januaryPrice', id='januaryPrice', value=apartment.januaryPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='februaryPrice') February Price
+      .col-sm-7
+        input.form-control(type='februaryPrice', name='februaryPrice', id='februaryPrice', value=apartment.februaryPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='marchPrice') March Price
+      .col-sm-7
+        input.form-control(type='marchPrice', name='marchPrice', id='marchPrice', value=apartment.marchPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='aprilPrice') April Price
+      .col-sm-7
+        input.form-control(type='aprilPrice', name='aprilPrice', id='aprilPrice', value=apartment.aprilPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='mayPrice') May Price
+      .col-sm-7
+        input.form-control(type='mayPrice', name='mayPrice', id='mayPrice', value=apartment.mayPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='junePrice') June Price
+      .col-sm-7
+        input.form-control(type='junePrice', name='junePrice', id='junePrice', value=apartment.junePrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='julyPrice') July Price
+      .col-sm-7
+        input.form-control(type='julyPrice', name='julyPrice', id='julyPrice', value=apartment.julyPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='augustPrice') August Price
+      .col-sm-7
+        input.form-control(type='augustPrice', name='augustPrice', id='augustPrice', value=apartment.augustPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='septemberPrice') September Price
+      .col-sm-7
+        input.form-control(type='septemberPrice', name='septemberPrice', id='septemberPrice', value=apartment.septemberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='octoberPrice') October Price
+      .col-sm-7
+        input.form-control(type='octoberPrice', name='octoberPrice', id='octoberPrice', value=apartment.octoberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='novemberPrice') November Price
+      .col-sm-7
+        input.form-control(type='novemberPrice', name='novemberPrice', id='novemberPrice', value=apartment.novemberPrice)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='decemberPrice') December Price
+      .col-sm-7
+        input.form-control(type='decemberPrice', name='decemberPrice', id='decemberPrice', value=apartment.decemberPrice)
+    .form-group.row.justify-content-md-center
+      .col-sm-4
+        button.btn.btn.btn-primary(type='submit')
+          i.fa.fa-pencil
+          | Update Apartment

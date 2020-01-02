@@ -1,0 +1,15 @@
+extends ../layout
+
+block content
+  h1 #{title}
+  hr
+  .row
+    .col-sm-6
+      h2 Edit Listing
+      p 
+        a(href="/account/edit-listing/" + apartmentNumber) Edit listing for apartment ##{apartmentNumber}.
+
+    .col-sm-6
+      h2 Edit Availability
+      p 
+        a(href="/account/update-availability/" + apartmentNumber) Edit availability for apartment ##{apartmentNumber}.
