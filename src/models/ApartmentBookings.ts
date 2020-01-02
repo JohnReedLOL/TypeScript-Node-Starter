@@ -8,7 +8,7 @@ export type ApartmentBookingsDocument = mongoose.Document & {
 };
 
 const apartmentBookingsSchema = new mongoose.Schema({
-    apartmentNumber: type: Number,
+    apartmentNumber: Number,
     eveningBooked: Date
 }, { timestamps: true });
 

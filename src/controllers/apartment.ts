@@ -12,17 +12,17 @@ import { check, sanitize, validationResult } from "express-validator";
 import "../config/passport";
 import { reduce } from "bluebird";
 
-/*
-app.get('/', function (req, res) {
-    res.render('index', { title: 'Hey', message: 'Hello there!'});
-});
+export const getApartment = (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
 
-html
-   head
-   title= title
-body
-   h1= message
-*/
+    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartment: ApartmentDocument) => {
+        if (err) { return next(err); }
+        res.render("apartment/getByNumber", {
+            title: "Apartment Number " + apartmentNumber,
+            apt: apartment
+        });
+    });
+};
 
 /**
  * GET /rent-apartment-by-landlord
@@ -37,8 +37,12 @@ export const getRentApartmentByLandlord = (req: Request, res: Response, next: Ne
     } else {
         Apartment.find({ landlordEmail: landlord}, (err, apartments: any) => {
             if (err) { return next(err); }
-            res.writeHead(200, {"Content-Type": "text/plain"});
-            res.end("Apartments owned by this landlord: \n" + apartments + "\n");
+            res.render("apartment/apartmentsWithLandlord", {
+                title: "Get Apartments By Landlord",
+                landlordsEmail: landlord,
+                apartments: apartments
+
+            });
         });
     }
 };

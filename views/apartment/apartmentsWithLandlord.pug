@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Apartments With Landlord Whose Email Is: #{landlordsEmail}
+    hr
+
+  ul
+    each apartment in apartments
+        li
+            a(href="/apartment/" + apartment.apartmentNumber) Apartment #{apartment.apartmentNumber}

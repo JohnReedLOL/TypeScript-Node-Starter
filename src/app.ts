@@ -108,6 +108,7 @@ app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userControl
 app.get("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.getCreateApartment);
 app.post("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.postCreateApartment);
 app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLandlord);
+app.get("/apartment/:apartmentNumber", apartmentController.getApartment);
 
 /**
  * API examples routes.

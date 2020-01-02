@@ -1,0 +1,13 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 Listing For Apartment
+    hr
+
+  ul
+    li apt = #{apt}
+    li apt.apartmentNumber = #{apt.apartmentNumber}
+    li apt.landlordEmail = #{apt.landlordEmail}
+    li apt.numBedrooms = #{apt.numBedrooms}
+    li apt.numBathrooms = #{apt.numBathrooms}
