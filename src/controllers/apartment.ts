@@ -15,11 +15,11 @@ import { reduce } from "bluebird";
 export const getApartment = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
 
-    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartment: ApartmentDocument) => {
+    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
         if (err) { return next(err); }
         res.render("apartment/getByNumber", {
             title: "Apartment Number " + apartmentNumber,
-            apt: apartment
+            apt: apartments[0]
         });
     });
 };

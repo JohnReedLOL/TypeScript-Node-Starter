@@ -2,12 +2,23 @@ extends ../layout
 
 block content
   .page-header
-    h3 Listing For Apartment
+    h3 Listing For Apartment Number # #{apt.apartmentNumber}
     hr
 
   ul
-    li apt = #{apt}
-    li apt.apartmentNumber = #{apt.apartmentNumber}
     li apt.landlordEmail = #{apt.landlordEmail}
     li apt.numBedrooms = #{apt.numBedrooms}
     li apt.numBathrooms = #{apt.numBathrooms}
+    li apt.additionalInformation = #{apt.additionalInformation}
+    li apt.januaryPrice = #{apt.januaryPrice}
+    li apt.februaryPrice = #{apt.februaryPrice}
+    li apt.marchPrice = #{apt.marchPrice}
+    li apt.aprilPrice = #{apt.aprilPrice}
+    li apt.mayPrice = #{apt.mayPrice}
+    li apt.junePrice = #{apt.junePrice}
+    li apt.julyPrice = #{apt.julyPrice}
+    li apt.augustPrice = #{apt.augustPrice}
+    li apt.septemberPrice = #{apt.septemberPrice}
+    li apt.octoberPrice = #{apt.octoberPrice}
+    li apt.novemberPrice = #{apt.novemberPrice}
+    li apt.decemberPrice = #{apt.decemberPrice}
