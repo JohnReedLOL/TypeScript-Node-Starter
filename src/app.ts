@@ -42,7 +42,7 @@ mongoose.connect(mongoUrl, { useNewUrlParser: true, useCreateIndex: true, useUni
 // app.set("port", process.env.PORT || 3000);
 // Heroku requres port 8000
 app.set("port", process.env.PORT || 8000);
-
+app.locals.pretty = true; // Get rid of HTML compression.
 app.set("views", path.join(__dirname, "../views"));
 app.set("view engine", "pug");
 app.use(compression());
@@ -111,8 +111,10 @@ app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLan
 app.get("/apartment/:apartmentNumber", apartmentController.getApartment);
 app.get("/account/update-listing", passportConfig.isAuthenticated, apartmentController.updateApartment);
 app.get("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.updateApartmentAvailability);
+app.post("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentAvailability);
 app.get("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.getUpdateApartmentListing);
 app.post("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentListing);
+
 
 /**
  * API examples routes.

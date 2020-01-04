@@ -83,12 +83,26 @@ export const getUpdateApartmentListing = (req: Request, res: Response, next: Nex
 
 /**
  * GET /account/update-availability/:apartmentNumber
- * Chose between updating the info for an apartment or updating its availability
+ * Book dates for an apartment
  */
 export const updateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    res.render("apartment/availability", {
+        title: "Update Availability For Apartment #" + apartmentNumber,
+        apartmentNumber: apartmentNumber
+    });
+};
 
-    
+/**
+ * POST /account/update-availability/:apartmentNumber
+ * Book dates for an apartment
+ */
+export const postUpdateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    res.render("apartment/availability", {
+        title: "Update Availability For Apartment #" + apartmentNumber,
+        apartmentNumber: apartmentNumber
+    });
 };
 
 /**
