@@ -54,7 +54,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     const filter = { apartmentNumber: parseInt(req.body.apartmentNumber, 10) };
     const user = req.user as LandlordDocument;
     const update = { 
-        landlordEmail: user.email,
+        landlordEmail: user.email.toLowerCase(),
         numBedrooms: parseFloat(req.body.numBedrooms),
         numBathrooms: parseFloat(req.body.numBathrooms),
         januaryPrice: parseFloat(req.body.januaryPrice),
@@ -181,7 +181,7 @@ export const getApartment = (req: Request, res: Response, next: NextFunction) =>
  * Form to fill in the landlord. If landlord is filled, list the apartments.
  */
 export const getRentApartmentByLandlord = (req: Request, res: Response, next: NextFunction) => {
-    const landlord = req.query.landlord; // email address of landlord
+    const landlord = req.query.landlord.toLowerCase(); // email address of landlord
     if(landlord == undefined) {
         res.render("apartment/getByLandlord", {
             title: "Get Apartments By Landlord"
@@ -276,7 +276,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
 
     const user = req.user as LandlordDocument;
     apartment.apartmentNumber = parseInt(req.body.apartmentNumber, 10);
-    apartment.landlordEmail = user.email;
+    apartment.landlordEmail = user.email.toLowerCase();
     apartment.numBedrooms = parseFloat(req.body.numBedrooms);
     apartment.numBathrooms = parseFloat(req.body.numBathrooms);
     apartment.januaryPrice = parseFloat(req.body.januaryPrice);

@@ -94,7 +94,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     }
 
     const user = new Landlord({
-        email: req.body.email,
+        email: req.body.email.toLowerCase(), // Make it lowercase in database.
         password: req.body.password
     });
 

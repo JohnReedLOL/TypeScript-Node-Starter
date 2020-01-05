@@ -40,7 +40,7 @@ export const postContact = async (req: Request, res: Response) => {
 
     const mailOptions = {
         to: "JohnMichaelReedFAS@gmail.com",
-        from: `${req.body.name} <${req.body.email}>`,
+        from: `${req.body.name} <${req.body.email.toLowerCase()}>`,
         subject: "Sea Air Towers Contact",
         text: req.body.message
     };
