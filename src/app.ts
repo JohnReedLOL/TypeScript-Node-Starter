@@ -114,6 +114,7 @@ app.get("/account/update-availability/:apartmentNumber", passportConfig.isAuthen
 app.post("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentAvailability);
 app.get("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.getUpdateApartmentListing);
 app.post("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentListing);
+app.get("/search-for-apartments", apartmentController.searchForApartments);
 
 
 /**

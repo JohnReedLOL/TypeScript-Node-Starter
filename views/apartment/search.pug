@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 #{title}
+    hr
+
+  form.form-horizontal(action='/get-search-results', method='GET')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBedrooms') Number of bedrooms greater than
+      .col-sm-7
+        input.form-control(type='numBedrooms', name='numBedrooms', id='numBedrooms', value='0')
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBathrooms') Number of bathrooms greater than
+      .col-sm-7
+        input.form-control(type='numBathrooms', name='numBathrooms', id='numBathrooms', value='0')
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='dateRange') Availiable in date range
+      .col-sm-7
+        input.form-control(type='dateRange', name='dateRange', id='dateRange', value='01/01/2018 - 01/15/2018')
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='foo') Price for month of [month] less than [$X]
+      .col-sm-7
+        input.form-control(type='foo', name='foo', id='foo', value='February $2000')
+    .form-group.row.justify-content-md-center
+      .col-sm-4
+        button.btn.btn.btn-primary(type='submit')
+          i.fa.fa-pencil
+          | Search Apartments

@@ -14,6 +14,16 @@ import "../config/passport";
 import { reduce } from "bluebird";
 
 /**
+ * GET /search-for-apartments
+ * Page to let users search for apartments
+ */
+export const searchForApartments = (req: Request, res: Response) => {
+    res.render("apartment/search", {
+        title: "Search For Apartment"
+    });
+};
+
+/**
  * POST /account/edit-listing/:apartmentNumber
  * Chose between updating the info for an apartment or updating its availability
  */
