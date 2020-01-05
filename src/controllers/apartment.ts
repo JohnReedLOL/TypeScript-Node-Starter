@@ -181,12 +181,13 @@ export const getApartment = (req: Request, res: Response, next: NextFunction) =>
  * Form to fill in the landlord. If landlord is filled, list the apartments.
  */
 export const getRentApartmentByLandlord = (req: Request, res: Response, next: NextFunction) => {
-    const landlord = req.query.landlord.toLowerCase(); // email address of landlord
+    let landlord = req.query.landlord; // email address of landlord
     if(landlord == undefined) {
         res.render("apartment/getByLandlord", {
             title: "Get Apartments By Landlord"
         });
     } else {
+        landlord = landlord.toLowerCase();
         Apartment.find({ landlordEmail: landlord}, (err, apartments: any) => {
             if (err) { return next(err); }
             res.render("apartment/apartmentsWithLandlord", {
