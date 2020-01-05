@@ -5,7 +5,7 @@ block content
     h3 #{title}
     hr
 
-  form.form-horizontal(action='/account/update-availability/#{apartmentNumber}', method='POST')
+  form.form-horizontal(action='/account/update-availability/' + apartmentNumber, method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='daterange') Book Date Range

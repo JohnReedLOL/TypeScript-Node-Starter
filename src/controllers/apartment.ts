@@ -4,6 +4,7 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
 import { Apartment, ApartmentDocument } from "../models/Apartment";
+import { ApartmentBookings, ApartmentBookingsDocument } from "../models/ApartmentBookings";
 import { Landlord, LandlordDocument } from "../models/Landlord";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
@@ -93,15 +94,41 @@ export const updateApartmentAvailability = (req: Request, res: Response, next: N
     });
 };
 
+const addDaysToDate = (startDate: Date, days: number) => {
+    const date = new Date(startDate.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+};
+
+const getDates = (startDate: Date, stopDate: Date) => {
+    const dateArray = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+        dateArray.push(new Date (currentDate));
+        currentDate = addDaysToDate(currentDate, 1);
+    }
+    return dateArray;
+};
+
 /**
  * POST /account/update-availability/:apartmentNumber
  * Book dates for an apartment
  */
 export const postUpdateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    res.render("apartment/availability", {
-        title: "Update Availability For Apartment #" + apartmentNumber,
-        apartmentNumber: apartmentNumber
+    const dateRange = req.body.daterange;
+    const splitDateRange = dateRange.split("-");
+    const dateOneString = splitDateRange[0].trim();
+    const dateTwotring = splitDateRange[1].trim();
+    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+    const apartmentBookings = [];
+    for(let i = 0; i < dates.length; ++i) {
+        apartmentBookings.push({apartmentNumber : apartmentNumber, eveningBooked: dates[i]});
+    } 
+    ApartmentBookings.create(apartmentBookings, function (err: any, bookings: any) {
+        if (err) { return next(err); }
+        res.writeHead(200, {"Content-Type": "text/plain"});
+        res.end("Wrote the following booking days to the database:\n" + bookings);
     });
 };
 

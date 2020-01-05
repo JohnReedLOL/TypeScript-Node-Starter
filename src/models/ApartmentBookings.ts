@@ -12,4 +12,6 @@ const apartmentBookingsSchema = new mongoose.Schema({
     eveningBooked: Date
 }, { timestamps: true });
 
+apartmentBookingsSchema.index({ apartmentNumber: 1, eveningBooked: 1}, { unique: true });
+
 export const ApartmentBookings = mongoose.model<ApartmentBookingsDocument>("ApartmentBookings", apartmentBookingsSchema);
