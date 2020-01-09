@@ -54,9 +54,3 @@ block content
     li 
       b December Price: 
       | #{apt.decemberPrice}
-  
-  p The following evenings have already been booked:
-
-  ul
-    each date in datesBooked
-      li #{date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}
