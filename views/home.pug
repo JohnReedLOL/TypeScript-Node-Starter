@@ -2,18 +2,18 @@ extends layout
 
 block content
   h1 Sea Air Towers Vacation Rentals
-  p.lead A webpage for prospective renters to find apartments listed by landlords of Sea Air Towers.
+  p.lead Save 10% off VRBO prices by renting directly from landlords of Sea Air Towers.
   hr
   .row
     .col-sm-6
       h2 Search
       p 
-        a(href="/search-for-apartments") Search for apartments by dates of availability, number of bedrooms, number of bathrooms, and price.
+        a(href="/search-for-apartments") Search for apartments by number of bedrooms, number of bathrooms, dates of availability, and price within a given month.
 
     .col-sm-6
       h2 Rent
       p 
-        a(href="/rent-apartment-by-landlord") Pull up the page of a landlord's apartment by its apartment number.
+        a(href="/rent-apartment-by-landlord") Pull up appartments by landlord's email.
 
     .col-sm-6
       h2 List
@@ -24,3 +24,6 @@ block content
       h2 Update Listing
       p 
         a(href="/account/update-listing") Landlords, update the page for you apartment or its availability [sign in required].
+  hr
+  .row
+    img(src = 'https://media1.condo.com/buildings/img/1461347/b2389c7d-4aa7-4180-8baf-a49bda429375_dt.jpg' alt = 'Image of Sea Air Towers condominium')

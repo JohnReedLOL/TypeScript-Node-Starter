@@ -1,8 +1,12 @@
+"use strict";
+
 import async from "async";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
 import { Landlord, LandlordDocument, AuthToken } from "../models/Landlord";
+import { Apartment, ApartmentDocument } from "../models/Apartment";
+import { ApartmentBookings, ApartmentBookingsDocument } from "../models/ApartmentBookings";
 import { Request, Response, NextFunction } from "express";
 import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
@@ -127,44 +131,6 @@ export const getAccount = (req: Request, res: Response) => {
 };
 
 /**
- * POST /account/profile
- * Update profile information.
- */
-export const postUpdateProfile = async (req: Request, res: Response, next: NextFunction) => {
-    await check("email", "Please enter a valid email address.").isEmail().run(req);
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    await sanitize("email").normalizeEmail({ gmail_remove_dots: false }).run(req);
-
-    const errors = validationResult(req);
-
-    if (!errors.isEmpty()) {
-        req.flash("errors", errors.array());
-        return res.redirect("/account");
-    }
-
-    const user = req.user as LandlordDocument;
-    Landlord.findById(user.id, (err, user: LandlordDocument) => {
-        if (err) { return next(err); }
-        user.email = req.body.email || "";
-        user.profile.name = req.body.name || "";
-        user.profile.gender = req.body.gender || "";
-        user.profile.location = req.body.location || "";
-        user.profile.website = req.body.website || "";
-        user.save((err: WriteError) => {
-            if (err) {
-                if (err.code === 11000) {
-                    req.flash("errors", { msg: "The email address you have entered is already associated with an account." });
-                    return res.redirect("/account");
-                }
-                return next(err);
-            }
-            req.flash("success", { msg: "Profile information has been updated." });
-            res.redirect("/account");
-        });
-    });
-};
-
-/**
  * POST /account/password
  * Update current password.
  */
@@ -197,10 +163,27 @@ export const postUpdatePassword = async (req: Request, res: Response, next: Next
  */
 export const postDeleteAccount = (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as LandlordDocument;
+    // First delete the bookings under each apartment.
+    Apartment.find({ landlordEmail: user.email }, (err, apartments: any) => {
+        if (err) { return next(err); }
+        // If there are apartments, delete the bookings under said apartments.
+        if (! (!apartments || !Array.isArray(apartments) || apartments.length === 0) ) {
+            apartments.forEach( (apartment) => {
+                ApartmentBookings.deleteMany({ apartmentNumber: apartment.apartmentNumber}, (err) => {
+                    if (err) { return next(err); }
+                });
+            });
+        }
+     });
+     // Then delete all the apartments under this landlord
+    Apartment.deleteMany({ landlordEmail: user.email}, (err) => {
+        if (err) { return next(err); }
+    });
+    // Then delete the landlord
     Landlord.remove({ _id: user.id }, (err) => {
         if (err) { return next(err); }
         req.logout();
-        req.flash("info", { msg: "Your account has been deleted." });
+        req.flash("info", { msg: "Your account has been deleted along with your apartments and their bookings." });
         res.redirect("/");
     });
 };
@@ -370,14 +353,14 @@ export const postForgot = async (req: Request, res: Response, next: NextFunction
             const mailOptions = {
                 to: user.email,
                 from: "hackathon@starter.com",
-                subject: "Reset your password on Hackathon Starter",
+                subject: "Reset your password for Sea Air Towers",
                 text: `You are receiving this email because you (or someone else) have requested the reset of the password for your account.\n\n
           Please click on the following link, or paste this into your browser to complete the process:\n\n
           http://${req.headers.host}/reset/${token}\n\n
           If you did not request this, please ignore this email and your password will remain unchanged.\n`
             };
             transporter.sendMail(mailOptions, (err) => {
-                req.flash("info", { msg: `An e-mail has been sent to ${user.email} with further instructions.` });
+                req.flash("info", { msg: `An e-mail has been sent to ${user.email} with further instructions. Check your spam folder.` });
                 done(err);
             });
         }

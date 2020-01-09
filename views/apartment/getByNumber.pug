@@ -2,7 +2,7 @@ extends ../layout
 
 block content
   .page-header
-    h3 Listing For Apartment Number # #{apt.apartmentNumber}
+    h3 Listing For Apartment Number ##{apt.apartmentNumber}
     hr
 
   ul
@@ -22,3 +22,9 @@ block content
     li October Price: #{apt.octoberPrice}
     li November Price: #{apt.novemberPrice}
     li December Price: #{apt.decemberPrice}
+  
+  p The following evenings have already been booked:
+
+  ul
+    each date in datesBooked
+      li #{date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear()}

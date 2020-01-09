@@ -1,17 +1,91 @@
+"use strict";
+
 // I don't know if these all are necessary - I just copied them from user.ts
 import async from "async";
-import crypto from "crypto";
-import nodemailer from "nodemailer";
-import passport from "passport";
 import { Apartment, ApartmentDocument } from "../models/Apartment";
 import { ApartmentBookings, ApartmentBookingsDocument } from "../models/ApartmentBookings";
 import { Landlord, LandlordDocument } from "../models/Landlord";
 import { Request, Response, NextFunction } from "express";
-import { IVerifyOptions } from "passport-local";
 import { WriteError } from "mongodb";
 import { check, sanitize, validationResult } from "express-validator";
 import "../config/passport";
 import { reduce } from "bluebird";
+
+const addDaysToDate = (startDate: Date, days: number) => {
+    const date = new Date(startDate.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+};
+
+const getDates = (startDate: Date, stopDate: Date) => {
+    const dateArray: Date[] = [];
+    let currentDate = startDate;
+    while (currentDate <= stopDate) {
+        dateArray.push(new Date (currentDate));
+        currentDate = addDaysToDate(currentDate, 1);
+    }
+    return dateArray;
+};
+
+/**
+ * POST /search-for-apartments
+ * This does the actual searching for apartments in the database
+ */
+export const postSearchForApartments = async (req: Request, res: Response, next: NextFunction) => {
+    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
+    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash("errors", errors.array());
+        return res.redirect("search-for-apartments");
+    }
+    const numBedrooms = parseFloat(req.body.numBedrooms);
+    const numBathrooms = parseFloat(req.body.numBathrooms);
+    const dateRange = req.body.dateRange;
+    const splitDateRange = dateRange.split("-");
+    const dateOneString = splitDateRange[0].trim();
+    const dateTwotring = splitDateRange[1].trim();
+    const bookedDates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+    const bookedDatesTimes = new Set();
+    for(let i = 0; i < bookedDates.length; ++i) {
+        const bookedDate: Date = bookedDates[i];
+        bookedDatesTimes.add(bookedDate.getTime());
+    }
+    const monthPrice = req.body.monthPrice.split(" ");
+    const month = monthPrice[0].trim().toLowerCase();
+    let price = monthPrice[1].trim();
+    if(price.charAt(0) == "$") {
+        price = price.substr(1);
+    }
+    const monthVariable = month + "Price";
+    // Filter by numBathrooms, numBedrooms, and price for a given month now. Filter by dates booked later.
+    Apartment.find({ numBathrooms: { $gte: numBathrooms }, numBedrooms: { $gte: numBedrooms },
+        [monthVariable]: { $lte: price }}, (err, apartments: any) => {
+        if (err) { return next(err); }
+        const apartmentNumbers: number[] = [];
+        for(let i = 0; i < apartments.length; ++i) {
+            const apartment = apartments[i];
+            apartmentNumbers.push(apartment.apartmentNumber);
+        }
+        const apartmentNumbersSet = new Set(apartmentNumbers);
+        // Now we can filter by dates booked.
+        ApartmentBookings.find({apartmentNumber: { $in: apartmentNumbers }}, (err, bookings: any) => {
+            if (err) { return next(err); }
+            // Filter out all the apartments whose dates are booked from the apartmentNumbersSet.
+            for(const booking of bookings) {
+                const bookingDate: Date = booking.eveningBooked;
+                if(bookedDatesTimes.has(bookingDate.getTime())) {
+                    apartmentNumbersSet.delete(booking.apartmentNumber);
+                }
+            }
+            return res.render("apartment/apartmentsThatMatchSearch", {
+                title: "Apartments That Match Your Search",
+                apartmentNumbers: Array.from(apartmentNumbersSet)
+
+            });
+        });
+    });
+};
 
 /**
  * GET /search-for-apartments
@@ -44,12 +118,12 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
     await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
     await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
-    const errors = validationResult(req); // user local variable has .apartments: CoreMongoseArray(0)
+    const errors = validationResult(req);
 
-    if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
+    if (!errors.isEmpty()) {
         req.flash("errors", errors.array());
         return res.redirect("account/edit-listing/" + apartmentNumber);
-    } // body.additional-information: "AdditionInfoRow1 111\r\nAdditionInfoRow2 222"
+    }
 
     const filter = { apartmentNumber: parseInt(req.body.apartmentNumber, 10) };
     const user = req.user as LandlordDocument;
@@ -73,7 +147,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     };
 
     await Apartment.findOneAndUpdate(filter, update);
-    return res.redirect("/account/update-listing");
+    res.redirect("/account/update-listing");
 };
 
 /**
@@ -99,25 +173,9 @@ export const getUpdateApartmentListing = (req: Request, res: Response, next: Nex
 export const updateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
     res.render("apartment/availability", {
-        title: "Update Availability For Apartment #" + apartmentNumber,
+        title: "Book Dates For Apartment #" + apartmentNumber,
         apartmentNumber: apartmentNumber
     });
-};
-
-const addDaysToDate = (startDate: Date, days: number) => {
-    const date = new Date(startDate.valueOf());
-    date.setDate(date.getDate() + days);
-    return date;
-};
-
-const getDates = (startDate: Date, stopDate: Date) => {
-    const dateArray = [];
-    let currentDate = startDate;
-    while (currentDate <= stopDate) {
-        dateArray.push(new Date (currentDate));
-        currentDate = addDaysToDate(currentDate, 1);
-    }
-    return dateArray;
 };
 
 /**
@@ -137,8 +195,10 @@ export const postUpdateApartmentAvailability = (req: Request, res: Response, nex
     } 
     ApartmentBookings.create(apartmentBookings, function (err: any, bookings: any) {
         if (err) { return next(err); }
-        res.writeHead(200, {"Content-Type": "text/plain"});
-        res.end("Wrote the following booking days to the database:\n" + bookings);
+        return res.render("apartment/bookedDays", {
+            title: "The following evenings have been booked:",
+            bookings: bookings
+        });
     });
 };
 
@@ -169,9 +229,17 @@ export const getApartment = (req: Request, res: Response, next: NextFunction) =>
 
     Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
         if (err) { return next(err); }
-        res.render("apartment/getByNumber", {
-            title: "Apartment Number " + apartmentNumber,
-            apt: apartments[0]
+        const myApartment = apartments[0];
+        ApartmentBookings.find( {apartmentNumber: apartmentNumber}, (err, bookings: any) => {
+            const datesBooked = [];
+            for(const booking of bookings) {
+                datesBooked.push(booking.eveningBooked);
+            }
+            res.render("apartment/getByNumber", {
+                title: "Apartment Number " + apartmentNumber,
+                apt: myApartment,
+                datesBooked: datesBooked
+            });
         });
     });
 };

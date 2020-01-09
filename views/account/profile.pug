@@ -2,48 +2,8 @@ extends ../layout
 
 block content
   .page-header
-    h3 Landlord's Profile Information
+    h3 Landlord's Account Page
     hr
-
-  form.form-horizontal(action='/account/profile', method='POST')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='email') Email
-      .col-sm-7
-        input.form-control(type='email', name='email', id='email', value=user.email)
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='name') Name
-      .col-sm-7
-        input.form-control(type='text', name='name', id='name', value=user.profile.name)
-    .form-group.row.justify-content-md-center.align-items-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold Gender
-      .col-sm-7
-        .form-check.form-check-inline
-          input#option-man.form-check-input(type='radio', checked=user.profile.gender==='man', name='gender', value='man', data-toggle='radio')
-          label.form-check-label(for="option-man") Man
-        .form-check.form-check-inline
-          input#option-woman.form-check-input(type='radio', checked=user.profile.gender==='woman', name='gender', value='woman', data-toggle='radio')
-          label.form-check-label(for="option-woman") Woman
-        .form-check.form-check-inline
-          input#option-nonbinary.form-check-input(type='radio', checked=user.profile.gender==='nonbinary', name='gender', value='nonbinary', data-toggle='radio')
-          label.form-check-label(for="option-nonbinary") Non-binary
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='location') Location
-      .col-sm-7
-        input.form-control(type='text', name='location', id='location', value=user.profile.location)
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='website') Website
-      .col-sm-7
-        input.form-control(type='text', name='website', id='website', value=user.profile.website)
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold Gravatar
-      .col-sm-7
-        img(src=user.gravatar(), class='profile', width='100', height='100', alt=((user.profile.name || user.email || user.id)))
-    .form-group.row.justify-content-md-center
-      .col-sm-4
-        button.btn.btn.btn-primary(type='submit')
-          i.fa.fa-pencil
-          | Update Profile
 
   .page-header
     h3 Change Password
@@ -72,6 +32,7 @@ block content
   form.form-horizontal(action='/account/delete', method='POST')
     .form-group.row.justify-content-md-center
       p.offset-sm-3.col-sm-7 You can delete your account, but keep in mind this action is irreversible.
+      p.offset-sm-3.col-sm-7 All apartments under your email will also be deleted, as will the bookings under those apartments.
       input(type='hidden', name='_csrf', value=_csrf)
       .col-sm-4
         button.btn.btn-danger(type='submit')

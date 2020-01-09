@@ -11,10 +11,8 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light.fixed-top
       ul.nav.navbar-nav.mr-auto
         li.nav-item(class=(title === 'Home') ? 'active' : undefined)
           a.nav-link(href='/') Home
-        li.nav-item(class=(title === 'API Examples') ? 'active' : undefined)
-          a.nav-link(href='/api') API Examples
-        li.nav-item(class=(title === 'Contact') ? 'active' : undefined)
-          a.nav-link(href='/contact') Contact
+        li.nav-item(class=(title === 'Report A Bug') ? 'active' : undefined)
+          a.nav-link(href='/contact') Report A Bug
       ul.nav.navbar-nav
         if !user
           li.nav-item(class=(title === 'Login') ? 'active' : undefined)
