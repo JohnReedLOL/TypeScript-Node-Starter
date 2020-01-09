@@ -51,16 +51,17 @@ export const postSearchForApartments = async (req: Request, res: Response, next:
         const bookedDate: Date = bookedDates[i];
         bookedDatesTimes.add(bookedDate.getTime());
     }
-    const monthPrice = req.body.monthPrice.split(" ");
-    const month = monthPrice[0].trim().toLowerCase();
-    let price = monthPrice[1].trim();
-    if(price.charAt(0) == "$") {
-        price = price.substr(1);
-    }
-    const monthVariable = month + "Price";
+    // We are no longer filtering by price in a given month
+    // const monthPrice = req.body.monthPrice.split(" ");
+    // const month = monthPrice[0].trim().toLowerCase();
+    // let price = monthPrice[1].trim();
+    // if(price.charAt(0) == "$") {
+    //     price = price.substr(1);
+    // }
+    // const monthVariable = month + "Price";
     // Filter by numBathrooms, numBedrooms, and price for a given month now. Filter by dates booked later.
     Apartment.find({ numBathrooms: { $gte: numBathrooms }, numBedrooms: { $gte: numBedrooms },
-        [monthVariable]: { $lte: price }}, (err, apartments: any) => {
+        }, (err, apartments: any) => {
         if (err) { return next(err); }
         const apartmentNumbers: number[] = [];
         for(let i = 0; i < apartments.length; ++i) {

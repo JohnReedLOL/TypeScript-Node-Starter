@@ -20,11 +20,14 @@ block content
       .col-sm-7
         input.form-control(type='dateRange', name='dateRange', id='dateRange', value='01/01/2020 - 01/15/2020')
     .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='monthPrice') Price for month of [Month] at most [$X]
-      .col-sm-7
-        input.form-control(type='monthPrice', name='monthPrice', id='monthPrice', value='January $99999')
-    .form-group.row.justify-content-md-center
       .col-sm-4
         button.btn.btn.btn-primary(type='submit')
           i.fa.fa-pencil
           | Search Apartments
+//-
+    This was to search by price for a given month
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='monthPrice') Price for month of [Month] at most [$X]
+      .col-sm-7
+        input.form-control(type='monthPrice', name='monthPrice', id='monthPrice', value='January $99999')
+//-
