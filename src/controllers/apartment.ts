@@ -99,7 +99,7 @@ export const searchForApartments = (req: Request, res: Response) => {
 
 /**
  * POST /account/edit-listing/:apartmentNumber
- * Chose between updating the info for an apartment or updating its availability
+ * Call to update listing for an apartment.
  */
 export const postUpdateApartmentListing = async (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
@@ -131,6 +131,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
         landlordEmail: user.email.toLowerCase(),
         numBedrooms: parseFloat(req.body.numBedrooms),
         numBathrooms: parseFloat(req.body.numBathrooms),
+        photosFolder: req.body.photosFolder,
         januaryPrice: parseFloat(req.body.januaryPrice),
         februaryPrice: parseFloat(req.body.februaryPrice),
         marchPrice: parseFloat(req.body.marchPrice),
@@ -152,7 +153,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
 
 /**
  * GET /account/edit-listing/:apartmentNumber
- * Chose between updating the info for an apartment or updating its availability
+ * Page to update listing for an apartment.
  */
 export const getUpdateApartmentListing = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
@@ -272,6 +273,7 @@ export const getCreateApartment = (req: Request, res: Response) => {
             apartmentNumber: 0,
             numBedrooms: 0,
             numBathrooms: 0,
+            photosFolder: "https://drive.google.com/open?id=1_QApdFQj3sT2OG8q2NCjbIz20A384auz",
             additionalInformation: "",
             januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
             februaryPrice: 0,
@@ -321,6 +323,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
         landlordEmail: "",
         numBedrooms: 0,
         numBathrooms: 0,
+        photosFolder: "", // Link to photos of your apartment on Google Drive
         januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
         februaryPrice: 0,
         marchPrice: 0,
@@ -341,6 +344,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     apartment.landlordEmail = user.email.toLowerCase();
     apartment.numBedrooms = parseFloat(req.body.numBedrooms);
     apartment.numBathrooms = parseFloat(req.body.numBathrooms);
+    apartment.photosFolder = req.body.photosFolder;
     apartment.januaryPrice = parseFloat(req.body.januaryPrice);
     apartment.februaryPrice = parseFloat(req.body.februaryPrice);
     apartment.marchPrice = parseFloat(req.body.marchPrice);

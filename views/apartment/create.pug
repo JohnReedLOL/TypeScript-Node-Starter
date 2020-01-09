@@ -14,13 +14,17 @@ block content
     .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBedrooms') Number of Bedrooms
       .col-sm-7
-        input.form-control(type='apartmentNumber', name='numBedrooms', id='numBedrooms', value=apartment.numBedrooms)
+        input.form-control(type='numBedrooms', name='numBedrooms', id='numBedrooms', value=apartment.numBedrooms)
     .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBathrooms') Number of Bathrooms
       .col-sm-7
-        input.form-control(type='apartmentNumber', name='numBathrooms', id='numBathrooms', value=apartment.numBathrooms)
+        input.form-control(type='numBathrooms', name='numBathrooms', id='numBathrooms', value=apartment.numBathrooms)
     .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additionalInformation') Additional Information (contact information, additional fees, links to photos in Google Drive, etc)
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='photosFolder')  Photos Folder (ex. Google Drive Link)
+      .col-sm-7
+        input.form-control(type='photosFolder', name='photosFolder', id='photosFolder', value=apartment.photosFolder)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additionalInformation') Additional Information (contact information, additional fees, etc)
       .col-sm-7
         textarea.form-control(type='additionalInformation', name='additionalInformation', id='additionalInformation', style='min-width: 100%', rows='5', value=apartment.additionalInformation)
     .form-group.row.justify-content-md-center

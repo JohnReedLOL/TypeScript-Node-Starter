@@ -16,6 +16,9 @@ block content
       b Number of bathrooms: 
       | #{apt.numBathrooms}
     li 
+      b Photos Folder (ex. Google Drive Link): 
+        a(href=apt.photosFolder) #{apt.photosFolder}
+    li 
       b Additional information: 
       | #{apt.additionalInformation}
     li 

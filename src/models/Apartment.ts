@@ -10,6 +10,8 @@ export type ApartmentDocument = mongoose.Document & {
     numBedrooms: number;
     numBathrooms: number;
 
+    photosFolder: string;
+
     // Only store the price per month, not per day. Landlords can negotiate for specific days.
     januaryPrice: number;
     februaryPrice: number;
@@ -34,6 +36,8 @@ const apartmentSchema = new mongoose.Schema({
 
     numBedrooms: Number,
     numBathrooms: Number,
+
+    photosFolder: String,
 
     // Only store the price per month, not per day. Landlords can negotiate for specific days.
     januaryPrice: Number,
