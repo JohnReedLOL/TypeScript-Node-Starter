@@ -26,7 +26,8 @@ block content
     .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='additionalInformation') Additional Information (contact information, additional fees, etc)
       .col-sm-7
-        input.form-control(type='additionalInformation', name='additionalInformation', id='additionalInformation', value=apartment.additionalInformation)
+        textarea(type='additionalInformation', name='additionalInformation', id='additionalInformation', rows='5', style="width:100%")
+          |  #{apartment.additionalInformation}
     .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='januaryPrice') January Price
       .col-sm-7
