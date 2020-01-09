@@ -230,17 +230,10 @@ export const getApartment = (req: Request, res: Response, next: NextFunction) =>
     Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
         if (err) { return next(err); }
         const myApartment = apartments[0];
-        ApartmentBookings.find( {apartmentNumber: apartmentNumber}, (err, bookings: any) => {
-            const datesBooked = [];
-            for(const booking of bookings) {
-                datesBooked.push(booking.eveningBooked);
-            }
             res.render("apartment/getByNumber", {
                 title: "Apartment Number " + apartmentNumber,
-                apt: myApartment,
-                datesBooked: datesBooked
+                apt: myApartment
             });
-        });
     });
 };
 
