@@ -107,6 +107,8 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
     await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
     await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    // Prices can start with a dollar sign
+    /*
     await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
     await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
     await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
@@ -119,6 +121,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
     await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
     await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
+    */
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -133,18 +136,18 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
         numBedrooms: parseFloat(req.body.numBedrooms),
         numBathrooms: parseFloat(req.body.numBathrooms),
         photosFolder: req.body.photosFolder,
-        januaryPrice: parseFloat(req.body.januaryPrice),
-        februaryPrice: parseFloat(req.body.februaryPrice),
-        marchPrice: parseFloat(req.body.marchPrice),
-        aprilPrice: parseFloat(req.body.aprilPrice),
-        mayPrice: parseFloat(req.body.mayPrice),
-        junePrice: parseFloat(req.body.junePrice),
-        julyPrice: parseFloat(req.body.julyPrice),
-        augustPrice: parseFloat(req.body.augustPrice),
-        septemberPrice: parseFloat(req.body.septemberPrice),
-        octoberPrice: parseFloat(req.body.octoberPrice),
-        novemberPrice: parseFloat(req.body.novemberPrice),
-        decemberPrice: parseFloat(req.body.decemberPrice),
+        januaryPrice: parseFloat(req.body.januaryPrice.replace("$", "")), // ignore the dollar sign
+        februaryPrice: parseFloat(req.body.februaryPrice.replace("$", "")),
+        marchPrice: parseFloat(req.body.marchPrice.replace("$", "")),
+        aprilPrice: parseFloat(req.body.aprilPrice.replace("$", "")),
+        mayPrice: parseFloat(req.body.mayPrice.replace("$", "")),
+        junePrice: parseFloat(req.body.junePrice.replace("$", "")),
+        julyPrice: parseFloat(req.body.julyPrice.replace("$", "")),
+        augustPrice: parseFloat(req.body.augustPrice.replace("$", "")),
+        septemberPrice: parseFloat(req.body.septemberPrice.replace("$", "")),
+        octoberPrice: parseFloat(req.body.octoberPrice.replace("$", "")),
+        novemberPrice: parseFloat(req.body.novemberPrice.replace("$", "")),
+        decemberPrice: parseFloat(req.body.decemberPrice.replace("$", "")),
         additionalInformation: req.body.additionalInformation
     };
 
@@ -300,6 +303,8 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
     await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
     await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    /*
+    Prices can contain a dollar sign
     await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
     await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
     await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
@@ -312,6 +317,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
     await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
     await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
+    */
     const errors = validationResult(req); // user local variable has .apartments: CoreMongoseArray(0)
 
     if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
@@ -346,18 +352,18 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     apartment.numBedrooms = parseFloat(req.body.numBedrooms);
     apartment.numBathrooms = parseFloat(req.body.numBathrooms);
     apartment.photosFolder = req.body.photosFolder;
-    apartment.januaryPrice = parseFloat(req.body.januaryPrice);
-    apartment.februaryPrice = parseFloat(req.body.februaryPrice);
-    apartment.marchPrice = parseFloat(req.body.marchPrice);
-    apartment.aprilPrice = parseFloat(req.body.aprilPrice);
-    apartment.mayPrice = parseFloat(req.body.mayPrice);
-    apartment.junePrice = parseFloat(req.body.junePrice);
-    apartment.julyPrice = parseFloat(req.body.julyPrice);
-    apartment.augustPrice = parseFloat(req.body.augustPrice);
-    apartment.septemberPrice = parseFloat(req.body.septemberPrice);
-    apartment.octoberPrice = parseFloat(req.body.octoberPrice);
-    apartment.novemberPrice = parseFloat(req.body.novemberPrice);
-    apartment.decemberPrice = parseFloat(req.body.decemberPrice);
+    apartment.januaryPrice = parseFloat(req.body.januaryPrice.replace("$", ""));
+    apartment.februaryPrice = parseFloat(req.body.februaryPrice.replace("$", ""));
+    apartment.marchPrice = parseFloat(req.body.marchPrice.replace("$", ""));
+    apartment.aprilPrice = parseFloat(req.body.aprilPrice.replace("$", ""));
+    apartment.mayPrice = parseFloat(req.body.mayPrice.replace("$", ""));
+    apartment.junePrice = parseFloat(req.body.junePrice.replace("$", ""));
+    apartment.julyPrice = parseFloat(req.body.julyPrice.replace("$", ""));
+    apartment.augustPrice = parseFloat(req.body.augustPrice.replace("$", ""));
+    apartment.septemberPrice = parseFloat(req.body.septemberPrice.replace("$", ""));
+    apartment.octoberPrice = parseFloat(req.body.octoberPrice.replace("$", ""));
+    apartment.novemberPrice = parseFloat(req.body.novemberPrice.replace("$", ""));
+    apartment.decemberPrice = parseFloat(req.body.decemberPrice.replace("$", ""));
     apartment.additionalInformation = req.body.additionalInformation;
     apartment.save((err: WriteError) => {
         if (err) {
