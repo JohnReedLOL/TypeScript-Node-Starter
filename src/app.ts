@@ -110,6 +110,7 @@ app.get("/apartment/:apartmentNumber", apartmentController.getApartment);
 app.get("/account/update-listing", passportConfig.isAuthenticated, apartmentController.updateApartment);
 app.get("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.updateApartmentAvailability);
 app.post("/account/update-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentAvailability);
+app.post("/account/unupdate-availability/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUnUpdateApartmentAvailability);
 app.get("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.getUpdateApartmentListing);
 app.post("/account/edit-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.postUpdateApartmentListing);
 app.get("/search-for-apartments", apartmentController.searchForApartments);

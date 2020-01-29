@@ -1,0 +1,11 @@
+extends ../layout
+
+block content
+  .page-header
+    h3 #{title}
+    hr
+
+  ul
+    each booking in bookings
+        li
+            p Evening: #{booking}

@@ -208,6 +208,27 @@ export const postUpdateApartmentAvailability = (req: Request, res: Response, nex
 };
 
 /**
+ * POST /account/unupdate-availability/:apartmentNumber
+ * Unbook dates for an apartment
+ */
+export const postUnUpdateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    const dateRange = req.body.daterange2;
+    const splitDateRange = dateRange.split("-");
+    const dateOneString = splitDateRange[0].trim();
+    const dateTwotring = splitDateRange[1].trim();
+    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+
+    ApartmentBookings.deleteMany({ apartmentNumber : apartmentNumber, eveningBooked: { $in: dates} }, function(err: any) {
+        if (err) { return next(err); }
+        return res.render("apartment/unbookedDays", {
+            title: "The following evenings have been unbooked:",
+            bookings: dates
+        });
+    });
+};
+
+/**
  * GET /account/update-listing
  * Chose between updating the info for an apartment or updating its availability
  */

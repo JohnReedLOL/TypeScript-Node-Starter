@@ -16,3 +16,15 @@ block content
         button.btn.btn.btn-primary(type='submit')
           i.fa.fa-pencil
           | Book Dates
+
+  form.form-horizontal(action='/account/unupdate-availability/' + apartmentNumber, method='POST')
+    input(type='hidden', name='_csrf', value=_csrf)
+    .form-group.row.justify-content-md-center
+      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='daterange2') Unbook Date Range
+      .col-sm-7
+        input.form-control(type='daterange2', name='daterange2', id='daterange2', value='01/01/2020 - 01/15/2020')
+    .form-group.row.justify-content-md-center
+      .col-sm-4
+        button.btn.btn.btn-primary(type='submit')
+          i.fa.fa-pencil
+          | Unbook Dates
