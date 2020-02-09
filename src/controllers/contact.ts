@@ -18,7 +18,7 @@ const transporter = nodemailer.createTransport({
  */
 export const getContact = (req: Request, res: Response) => {
     res.render("contact", {
-        title: "Contact"
+        title: "Contact The Developer"
     });
 };
 
