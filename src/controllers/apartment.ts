@@ -82,7 +82,6 @@ export const postSearchForApartments = async (req: Request, res: Response, next:
             return res.render("apartment/apartmentsThatMatchSearch", {
                 title: "Apartments That Match Your Search",
                 apartmentNumbers: Array.from(apartmentNumbersSet)
-
             });
         });
     });
@@ -151,8 +150,9 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
         additionalInformation: req.body.additionalInformation
     };
 
-    await Apartment.findOneAndUpdate(filter, update);
-    res.redirect("/account/update-listing");
+    Apartment.findOneAndUpdate(filter, update, (err, doc: any) => {
+        res.redirect("/account/update-listing");
+    });
 };
 
 /**
