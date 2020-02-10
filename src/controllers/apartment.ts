@@ -79,9 +79,11 @@ export const postSearchForApartments = async (req: Request, res: Response, next:
                     apartmentNumbersSet.delete(booking.apartmentNumber);
                 }
             }
+            // Sort the apartments in descending order
+            const nonBookedApartments: number[] = Array.from(apartmentNumbersSet).sort( (a, b) => {return b - a;} );
             return res.render("apartment/apartmentsThatMatchSearch", {
                 title: "Apartments That Match Your Search",
-                apartmentNumbers: Array.from(apartmentNumbersSet)
+                apartmentNumbers: nonBookedApartments
             });
         });
     });
