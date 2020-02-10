@@ -105,7 +105,6 @@ export const searchForApartments = (req: Request, res: Response) => {
  */
 export const postUpdateApartmentListing = async (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
     await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
     await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
     // Prices can start with a dollar sign
@@ -130,7 +129,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
         return res.redirect("account/edit-listing/" + apartmentNumber);
     }
 
-    const filter = { apartmentNumber: parseInt(req.body.apartmentNumber, 10) };
+    const filter = { apartmentNumber: apartmentNumber };
     const user = req.user as LandlordDocument;
     const update = { 
         landlordEmail: user.email.toLowerCase(),
@@ -163,12 +162,12 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
  */
 export const getUpdateApartmentListing = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
+    Apartment.findOne( {apartmentNumber: apartmentNumber}, (err, apartment: any) => {
         if (err) { return next(err); }
         res.render("apartment/update", {
             title: "Update Listing For Apartment #" + apartmentNumber,
             apartmentNumber: apartmentNumber,
-            apartment: apartments[0]
+            apartment: apartment
         });
     });  
 };
@@ -255,13 +254,12 @@ export const updateApartment = (req: Request, res: Response) => {
 export const getApartment = (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
 
-    Apartment.find( {apartmentNumber: apartmentNumber}, (err, apartments: any) => {
+    Apartment.findOne( {apartmentNumber: apartmentNumber}, (err, apartment: any) => {
         if (err) { return next(err); }
-        const myApartment = apartments[0];
-            res.render("apartment/getByNumber", {
-                title: "Apartment Number " + apartmentNumber,
-                apt: myApartment
-            });
+        res.render("apartment/getByNumber", {
+            title: "Apartment Number " + apartmentNumber,
+            apt: apartment
+        });
     });
 };
 

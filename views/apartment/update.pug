@@ -8,10 +8,6 @@ block content
   form.form-horizontal(action="/account/edit-listing/" + apartmentNumber, method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
     .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='apartmentNumber') Apartment Number
-      .col-sm-7
-        input.form-control(type='apartmentNumber', name='apartmentNumber', id='apartmentNumber', value=apartment.apartmentNumber)
-    .form-group.row.justify-content-md-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='numBedrooms') Number of Bedrooms
       .col-sm-7
         input.form-control(type='numBedrooms', name='numBedrooms', id='numBedrooms', value=apartment.numBedrooms)
@@ -80,4 +76,4 @@ block content
       .col-sm-4
         button.btn.btn.btn-primary(type='submit')
           i.fa.fa-pencil
-          | Update Apartment
+          | Update Listing
