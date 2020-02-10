@@ -37,7 +37,7 @@ export const postSearchForApartments = async (req: Request, res: Response, next:
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.flash("errors", errors.array());
-        return res.redirect("search-for-apartments");
+        return res.redirect("/search-for-apartments");
     }
     const numBedrooms = parseFloat(req.body.numBedrooms);
     const numBathrooms = parseFloat(req.body.numBathrooms);
@@ -126,7 +126,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
 
     if (!errors.isEmpty()) {
         req.flash("errors", errors.array());
-        return res.redirect("account/edit-listing/" + apartmentNumber);
+        return res.redirect("/account/edit-listing/" + apartmentNumber);
     }
 
     const filter = { apartmentNumber: apartmentNumber };
@@ -152,7 +152,8 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     };
 
     Apartment.findOneAndUpdate(filter, update, (err, doc: any) => {
-        res.redirect("/account/update-listing");
+        req.flash("success", { msg: "Success! Your listing has been updated." });
+        res.redirect("/apartment/" + apartmentNumber);
     });
 };
 
@@ -355,7 +356,7 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
 
     if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
         req.flash("errors", errors.array());
-        return res.redirect("account/list-apartment");
+        return res.redirect("/account/list-apartment");
     } // body.additional-information: "AdditionInfoRow1 111\r\nAdditionInfoRow2 222"
 
     const apartment = new Apartment({

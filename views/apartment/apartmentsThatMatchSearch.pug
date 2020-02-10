@@ -13,7 +13,8 @@ block content
             - const mayBePenthouse = (apartmentNumber < 28);
             - let optionalAsterisk = "";
             - if(mayBePenthouse) { optionalAsterisk = "*"; hasAsterisk = true; };
-            a(href="/apartment/" + apartmentNumber) Apartment #{apartmentNumber}#{optionalAsterisk}
+            a(href="/apartment/" + apartmentNumber) Apartment #{apartmentNumber}
+            | #{optionalAsterisk}
 
   if hasAsterisk
     p * Note that apartment numbers less than 28 may be penthouses and apartment numbers less than 13 may be on the ground floor. Check with the landlord.
