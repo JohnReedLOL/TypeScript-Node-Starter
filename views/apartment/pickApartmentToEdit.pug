@@ -5,14 +5,7 @@ block content
     h3 #{title}
     hr
 
-  form.form-horizontal(action='/account/update-listing', method='GET')
-    input(type='hidden', name='_csrf', value=_csrf)
-    .form-group.row.justify-content-md-center
-      label.col-sm-3.col-form-label.text-right.font-weight-bold(for='listing') Apartment Number
-      .col-sm-7
-        input.form-control(type='listing', name='listing', id='listing', value=0)
-    .form-group.row.justify-content-md-center
-      .col-sm-4
-        button.btn.btn.btn-primary(type='submit')
-          i.fa.fa-pencil
-          | Edit This
+  ul
+    each apartment in apartments
+        li
+            a(href="/account/update-listing/" + apartment.apartmentNumber) Apartment #{apartment.apartmentNumber}

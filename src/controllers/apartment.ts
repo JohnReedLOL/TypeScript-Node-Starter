@@ -231,20 +231,31 @@ export const postUnUpdateApartmentAvailability = (req: Request, res: Response, n
 
 /**
  * GET /account/update-listing
- * Chose between updating the info for an apartment or updating its availability
+ * See your listings to chose one to update.
  */
-export const updateApartment = (req: Request, res: Response) => {
-    const apartmentNumber = req.query.listing;
-    if(apartmentNumber == undefined) {
+export const chooseListingToUpdate = (req: Request, res: Response, next: NextFunction) => {
+    const user = req.user as LandlordDocument;
+    const landlordEMail = user.email.toLowerCase();
+    // select only the Apartment's apartmentNumber.
+    Apartment.find({ landlordEmail: landlordEMail}, "apartmentNumber", (err, apartments: any) => {
+        if (err) { return next(err); }
         res.render("apartment/pickApartmentToEdit", {
             title: "Pick An Apartment Number To Edit",
+            apartments: apartments
         });
-    } else {
-        res.render("apartment/editListingOrAvailability", {
-            title: "Update Listing Or Availability Of Apartment #" + apartmentNumber,
-            apartmentNumber: apartmentNumber
-        });
-    }
+    });
+};
+
+/**
+ * GET /account/update-listing/:apartmentNumber
+ * Chose between updating the info for an apartment or updating its availability.
+ */
+export const updateListing = (req: Request, res: Response) => {
+    const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
+    res.render("apartment/editListingOrAvailability", {
+        title: "Update Listing Or Availability Of Apartment #" + apartmentNumber,
+        apartmentNumber: apartmentNumber
+    });
 };
 
 /**
@@ -275,7 +286,8 @@ export const getRentApartmentByLandlord = (req: Request, res: Response, next: Ne
         });
     } else {
         landlord = landlord.toLowerCase();
-        Apartment.find({ landlordEmail: landlord}, (err, apartments: any) => {
+        // select only the Apartment's apartmentNumber.
+        Apartment.find({ landlordEmail: landlord}, "apartmentNumber", (err, apartments: any) => {
             if (err) { return next(err); }
             res.render("apartment/apartmentsWithLandlord", {
                 title: "Get Apartments By Landlord",
