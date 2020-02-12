@@ -2,12 +2,11 @@ extends ../layout
 
 block content
   .page-header
-    h3 Landlord's Account Page
+    h3.text-center Landlord's Account Page
     hr
 
   .page-header
-    h3 Change Password
-    hr
+    h4.text-center Change Password
 
   form.form-horizontal(action='/account/password', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
@@ -25,9 +24,10 @@ block content
           i.fa.fa-lock
           | Change Password
 
-  .page-header
-    h3 Delete Account
     hr
+
+  .page-header
+    h4.text-center Delete Account
 
   form.form-horizontal(action='/account/delete', method='POST')
     .form-group.row.justify-content-md-center

@@ -2,8 +2,8 @@ extends ../layout
 
 block content
   .page-header
-    h2 Landlords, Sign Up!
-    h4 WARNING: DO NOT USE A PASSWORD HERE FROM ANOTHER WEBSITE OR IT WILL GET STOLEN!
+    h3.text-center Landlords, Create Account
+    h5.text-center WARNING: DO NOT USE A PASSWORD HERE FROM ANOTHER WEBSITE!
     hr
   form.form-horizontal(id='signup-form', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
@@ -23,4 +23,4 @@ block content
       .offset-sm-3.col-sm-7
         button.btn.btn-success(type='submit')
           i.fa.fa-user-plus
-          | Signup
+          | Sign Up
