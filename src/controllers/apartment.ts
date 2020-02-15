@@ -27,25 +27,75 @@ const getDates = (startDate: Date, stopDate: Date) => {
     return dateArray;
 };
 
+// Make sure each date range looks like "MM/DD/YYYY - MM/DD/YYYY"
+const validateDateRange = (dateRange: string) => {
+    const splitDateRange = dateRange.split("-");
+
+    // Make sure date range has exactly one "-"
+    if(splitDateRange.length != 2) {
+        return false;
+    }
+
+    const dateOneString = splitDateRange[0].trim();
+    const dateTwoString = splitDateRange[1].trim();
+
+    // Make sure each date looks like "MM/DD/YYYY"
+    const validateDate = (dateString: string) => {
+        const dateStringSplit: string[] = dateString.split("/");
+        if(dateStringSplit.length != 3) {
+            return false;
+        } else {
+            const month = parseInt(dateStringSplit[0], 10);
+            const day = parseInt(dateStringSplit[1], 10);
+            const year = parseInt(dateStringSplit[2], 10);
+            if(! (month >= 1 && month <= 12) ) {
+                return false;
+            }
+            if(! (day >= 1 && day <= 31) ) {
+                return false;
+            }
+            if(! (year >= 2020) ) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const dateOneValid: boolean = validateDate(dateOneString);
+    const dateTwoValid: boolean = validateDate(dateTwoString);
+    if(dateOneValid && dateTwoValid) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 /**
  * POST /search-for-apartments
  * This does the actual searching for apartments in the database
  */
 export const postSearchForApartments = async (req: Request, res: Response, next: NextFunction) => {
-    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
-    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
+    await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
+    await check("dateRange", "Date range must be in format: MM/DD/YYYY - MM/DD/YYYY.").exists()
+    .custom( (dateRange: string) => {
+        return validateDateRange(dateRange);
+    }).run(req);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         req.flash("errors", errors.array());
         return res.redirect("/search-for-apartments");
     }
+
     const numBedrooms = parseFloat(req.body.numBedrooms);
     const numBathrooms = parseFloat(req.body.numBathrooms);
     const dateRange = req.body.dateRange;
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
-    const dateTwotring = splitDateRange[1].trim();
-    const bookedDates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+    const dateTwoString = splitDateRange[1].trim();
+
+    const bookedDates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
     const bookedDatesTimes = new Set();
     for(let i = 0; i < bookedDates.length; ++i) {
         const bookedDate: Date = bookedDates[i];
@@ -105,8 +155,8 @@ export const searchForApartments = (req: Request, res: Response) => {
  */
 export const postUpdateApartmentListing = async (req: Request, res: Response, next: NextFunction) => {
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
-    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
+    await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
     // Prices can start with a dollar sign
     /*
     await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
@@ -189,13 +239,27 @@ export const updateApartmentAvailability = (req: Request, res: Response, next: N
  * POST /account/update-availability/:apartmentNumber
  * Book dates for an apartment
  */
-export const postUpdateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
+export const postUpdateApartmentAvailability = async (req: Request, res: Response, next: NextFunction) => {
+
+    await check("dateRange", "Date range must be in format: MM/DD/YYYY - MM/DD/YYYY.").exists()
+    .custom( (dateRange: string) => {
+        return validateDateRange(dateRange);
+    }).run(req);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash("errors", errors.array());
+        return res.redirect("/account/update-availability/" + req.params.apartmentNumber);
+    }
+
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    const dateRange = req.body.daterange;
+    const dateRange = req.body.dateRange;
+
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
-    const dateTwotring = splitDateRange[1].trim();
-    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+    const dateTwoString = splitDateRange[1].trim();
+
+    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
     const apartmentBookings = [];
     for(let i = 0; i < dates.length; ++i) {
         apartmentBookings.push({apartmentNumber : apartmentNumber, eveningBooked: dates[i]});
@@ -213,13 +277,27 @@ export const postUpdateApartmentAvailability = (req: Request, res: Response, nex
  * POST /account/unupdate-availability/:apartmentNumber
  * Unbook dates for an apartment
  */
-export const postUnUpdateApartmentAvailability = (req: Request, res: Response, next: NextFunction) => {
+export const postUnUpdateApartmentAvailability = async (req: Request, res: Response, next: NextFunction) => {
+
+    await check("dateRange2", "Date range must be in format: MM/DD/YYYY - MM/DD/YYYY.").exists()
+    .custom( (dateRange: string) => {
+        return validateDateRange(dateRange);
+    }).run(req);
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        req.flash("errors", errors.array());
+        return res.redirect("/account/update-availability/" + req.params.apartmentNumber);
+    }
+
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
-    const dateRange = req.body.daterange2;
+
+    const dateRange = req.body.dateRange2;
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
-    const dateTwotring = splitDateRange[1].trim();
-    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwotring));
+    const dateTwoString = splitDateRange[1].trim();
+
+    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
 
     ApartmentBookings.deleteMany({ apartmentNumber : apartmentNumber, eveningBooked: { $in: dates} }, function(err: any) {
         if (err) { return next(err); }
@@ -334,9 +412,9 @@ export const getCreateApartment = (req: Request, res: Response) => {
  * Create landlord's apartment.
  */
 export const postCreateApartment = async (req: Request, res: Response, next: NextFunction) => {
-    await check("apartmentNumber", "apartmentNumber must be a number").isNumeric().run(req);
-    await check("numBedrooms", "numBedrooms must be a number").isNumeric().run(req);
-    await check("numBathrooms", "numBathrooms must be a number").isNumeric().run(req);
+    await check("apartmentNumber", "Apartment number must be a number.").exists().isNumeric().run(req);
+    await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
+    await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
     /*
     Prices can contain a dollar sign
     await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
