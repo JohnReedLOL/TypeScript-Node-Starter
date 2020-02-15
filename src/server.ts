@@ -7,6 +7,9 @@ import app from "./app";
  */
 // app.use(errorHandler()); // Allow me to see errors.
 
+// I want dev environment
+app.set("env", "dev");
+
 /**
  * Start Express server.
  */
