@@ -45,6 +45,12 @@ const validateDateRange = (dateRange: string) => {
         if(dateStringSplit.length != 3) {
             return false;
         } else {
+            // Make sure these are all numbers. Sorry for the ugly casing
+            if( isNaN(dateStringSplit[0] as unknown as number)
+                || isNaN(dateStringSplit[1] as unknown as number)
+                || isNaN(dateStringSplit[2] as unknown as number) ) {
+                return false;
+            }
             const month = parseInt(dateStringSplit[0], 10);
             const day = parseInt(dateStringSplit[1], 10);
             const year = parseInt(dateStringSplit[2], 10);

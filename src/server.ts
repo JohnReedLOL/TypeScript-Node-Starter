@@ -5,7 +5,7 @@ import app from "./app";
 /**
  * Error Handler. Provides full stack - remove for production
  */
-app.use(errorHandler());
+// app.use(errorHandler()); // Allow me to see errors.
 
 /**
  * Start Express server.
