@@ -180,7 +180,7 @@ export const postDeleteAccount = (req: Request, res: Response, next: NextFunctio
         if (err) { return next(err); }
     });
     // Then delete the landlord
-    Landlord.remove({ _id: user.id }, (err) => {
+    Landlord.deleteOne({ _id: user.id }, (err) => {
         if (err) { return next(err); }
         req.logout();
         req.flash("info", { msg: "Your account has been deleted along with your apartments and their bookings." });
