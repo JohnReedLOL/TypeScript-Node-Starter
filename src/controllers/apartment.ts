@@ -208,6 +208,7 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     };
 
     Apartment.findOneAndUpdate(filter, update, (err, doc: any) => {
+        if (err) { return next(err); }
         req.flash("success", { msg: "Success! Your listing has been updated." });
         res.redirect("/apartment/" + apartmentNumber);
     });
