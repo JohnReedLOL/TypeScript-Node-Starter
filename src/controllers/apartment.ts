@@ -265,14 +265,19 @@ export const postUpdateApartmentAvailability = async (req: Request, res: Respons
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
     const dateTwoString = splitDateRange[1].trim();
+    const firstDate = new Date(dateOneString);
+    const secondDate = new Date(dateTwoString);
+    if(firstDate.getTime() > secondDate.getTime()) {
+        return next("Looks like your first date is greater than your second date. Hit the back button and try again.");
+    }
 
-    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
+    const dates: Date[]  = getDates(firstDate, secondDate);
     const apartmentBookings = [];
     for(let i = 0; i < dates.length; ++i) {
         apartmentBookings.push({apartmentNumber : apartmentNumber, eveningBooked: dates[i]});
     } 
     ApartmentBookings.create(apartmentBookings, function (err: any, bookings: any) {
-        if (err) { return next(err); }
+        if (err) { return next("Looks like you tried to book a day that was already booked. It's not a problem - just hit the back button."); }
         return res.render("apartment/bookedDays", {
             title: "The following evenings have been booked:",
             bookings: bookings
@@ -303,8 +308,13 @@ export const postUnUpdateApartmentAvailability = async (req: Request, res: Respo
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
     const dateTwoString = splitDateRange[1].trim();
+    const firstDate = new Date(dateOneString);
+    const secondDate = new Date(dateTwoString);
+    if(firstDate.getTime() > secondDate.getTime()) {
+        return next("Looks like your first date is greater than your second date. Hit the back button and try again.");
+    }
 
-    const dates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
+    const dates: Date[]  = getDates(firstDate, secondDate);
 
     ApartmentBookings.deleteMany({ apartmentNumber : apartmentNumber, eveningBooked: { $in: dates} }, function(err: any) {
         if (err) { return next(err); }
