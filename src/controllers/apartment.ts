@@ -351,8 +351,11 @@ export const postUpdateApartmentAvailability = async (req: Request, res: Respons
     ApartmentBookings.create(apartmentBookings, function (err: any, bookings: any) {
         if (err) {
             if (err.code === 11000) { // If unique index already exists err = MongoError: E11000 duplicate
-                req.flash("errors", { msg: "Warning: You tried to book a day that was already booked." });
-                return res.redirect("/account/update-availability/" + apartmentNumber);
+                req.flash("errors", { msg: "Warning: You tried to book a day that was already booked. Your days were booked anyway." });
+                return res.render("apartment/bookedDays", {
+                    title: "The Following Evenings Have Been Booked:",
+                    bookings: dates
+                });
             } else {
                 return next(err);
             }
