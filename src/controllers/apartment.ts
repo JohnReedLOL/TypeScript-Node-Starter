@@ -488,8 +488,7 @@ export const getCreateApartment = (req: Request, res: Response) => {
             apartmentNumber: 0,
             numBedrooms: 0,
             numBathrooms: 0,
-            // TODO - change this to direct link to instructions.
-            photosFolder: "https://drive.google.com/open?id=1_QApdFQj3sT2OG8q2NCjbIz20A384auz",
+            photosFolder: "https://tinyurl.com/ra9kxgs",
             additionalInformation: "",
             januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
             februaryPrice: 0,
