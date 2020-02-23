@@ -105,7 +105,7 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
     Landlord.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) { return next(err); }
         if (existingUser) {
-            req.flash("errors", { msg: "Account with that email address already exists." });
+            req.flash("errors", { msg: "An account with that email address already exists. If that email is yours, try signing in." });
             return res.redirect("/signup");
         }
         user.save((err) => {

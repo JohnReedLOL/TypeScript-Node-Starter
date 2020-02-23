@@ -60,7 +60,7 @@ const validateDateRange = (dateRange: string) => {
             if(! (day >= 1 && day <= 31) ) {
                 return false;
             }
-            if(! (year >= 2020) ) {
+            if(! (year >= 1000) ) {
                 return false;
             }
         }
@@ -76,6 +76,40 @@ const validateDateRange = (dateRange: string) => {
     }
 };
 
+// Make sure prices look like "$N" or "N" where N is a number.
+const validatePrice = (price: string) => {
+    const priceTrimmed = price.trim();
+    let priceNumber = priceTrimmed;
+    // Remove the leading dollar sign.
+    if(priceNumber.charAt(0) === "$") {
+        priceNumber = priceNumber.substr(1);
+    }
+    // Make sure that the price is a number.
+    if( isNaN(priceNumber as unknown as number) ) {
+        return false;
+    }
+    return true;
+};
+
+// Make sure the link contains a dot.
+const validateLink = (link: string) => {
+    const linkTrimmed = link.trim();
+    if(! linkTrimmed.includes(".") ) {
+        return false;
+    }
+
+    const urlSplit: string[] = linkTrimmed.split(".");
+    // Make sure there is a character after the dot (ex .com, .net, etc)
+    for(let i = 0; i < urlSplit.length; ++i) {
+        const urlPortion = urlSplit[i];
+        if(urlPortion.length < 1) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
 /**
  * POST /search-for-apartments
  * This does the actual searching for apartments in the database
@@ -83,8 +117,7 @@ const validateDateRange = (dateRange: string) => {
 export const postSearchForApartments = async (req: Request, res: Response, next: NextFunction) => {
     await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
     await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
-    await check("dateRange", "Date range must be in format: MM/DD/YYYY - MM/DD/YYYY.").exists()
-    .custom( (dateRange: string) => {
+    await check("dateRange", "Date range must be in format: MM/DD/YYYY - MM/DD/YYYY.").exists().custom( (dateRange: string) => {
         return validateDateRange(dateRange);
     }).run(req);
 
@@ -100,8 +133,17 @@ export const postSearchForApartments = async (req: Request, res: Response, next:
     const splitDateRange = dateRange.split("-");
     const dateOneString = splitDateRange[0].trim();
     const dateTwoString = splitDateRange[1].trim();
+    const firstDate = new Date(dateOneString);
+    const secondDate = new Date(dateTwoString);
 
-    const bookedDates: Date[]  = getDates(new Date(dateOneString), new Date(dateTwoString));
+    if(firstDate.getTime() > secondDate.getTime()) {
+        const errorBody = "Your first date (" + firstDate.toDateString() + ") is greater than your second date (" + secondDate.toDateString() + "). Hit the back button and try again.";
+        return res.render("error", {
+            errorBody: errorBody
+        });
+    }
+
+    const bookedDates: Date[]  = getDates(firstDate, secondDate);
     const bookedDatesTimes = new Set();
     for(let i = 0; i < bookedDates.length; ++i) {
         const bookedDate: Date = bookedDates[i];
@@ -163,21 +205,48 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
     const apartmentNumber = parseInt(req.params.apartmentNumber, 10);
     await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
     await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
-    // Prices can start with a dollar sign
-    /*
-    await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
-    await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
-    await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
-    await check("aprilPrice", "aprilPrice must be a number").isNumeric().run(req);
-    await check("mayPrice", "mayPrice must be a number").isNumeric().run(req);
-    await check("junePrice", "junePrice must be a number").isNumeric().run(req);
-    await check("julyPrice", "julyPrice must be a number").isNumeric().run(req);
-    await check("augustPrice", "augustPrice must be a number").isNumeric().run(req);
-    await check("septemberPrice", "septemberPrice must be a number").isNumeric().run(req);
-    await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
-    await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
-    await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
-    */
+
+    await check("photosFolder", "Photos link must be a valid link.").exists().custom( (url: string) => {
+        return validateLink(url);
+    }).run(req);
+
+    await check("januaryPrice", "January's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("februaryPrice", "February's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("marchPrice", "March's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("aprilPrice", "April's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("mayPrice", "May's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("junePrice", "June's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("julyPrice", "July's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("augustPrice", "August's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("septemberPrice", "September's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("octoberPrice", "October's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("novemberPrice", "November's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("decemberPrice", "December's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+
     const errors = validationResult(req);
 
     if (!errors.isEmpty()) {
@@ -187,23 +256,23 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
 
     const filter = { apartmentNumber: apartmentNumber };
     const user = req.user as LandlordDocument;
-    const update = { 
-        landlordEmail: user.email.toLowerCase(),
-        numBedrooms: parseFloat(req.body.numBedrooms),
-        numBathrooms: parseFloat(req.body.numBathrooms),
-        photosFolder: req.body.photosFolder,
-        januaryPrice: parseFloat(req.body.januaryPrice.replace("$", "")), // ignore the dollar sign
-        februaryPrice: parseFloat(req.body.februaryPrice.replace("$", "")),
-        marchPrice: parseFloat(req.body.marchPrice.replace("$", "")),
-        aprilPrice: parseFloat(req.body.aprilPrice.replace("$", "")),
-        mayPrice: parseFloat(req.body.mayPrice.replace("$", "")),
-        junePrice: parseFloat(req.body.junePrice.replace("$", "")),
-        julyPrice: parseFloat(req.body.julyPrice.replace("$", "")),
-        augustPrice: parseFloat(req.body.augustPrice.replace("$", "")),
-        septemberPrice: parseFloat(req.body.septemberPrice.replace("$", "")),
-        octoberPrice: parseFloat(req.body.octoberPrice.replace("$", "")),
-        novemberPrice: parseFloat(req.body.novemberPrice.replace("$", "")),
-        decemberPrice: parseFloat(req.body.decemberPrice.replace("$", "")),
+    const update = {
+        landlordEmail: user.email.trim().toLowerCase(),
+        numBedrooms: parseFloat(req.body.numBedrooms.trim()),
+        numBathrooms: parseFloat(req.body.numBathrooms.trim()),
+        photosFolder: req.body.photosFolder.trim(),
+        januaryPrice: parseFloat(req.body.januaryPrice.trim().replace("$", "")), // ignore the dollar sign
+        februaryPrice: parseFloat(req.body.februaryPrice.trim().replace("$", "")),
+        marchPrice: parseFloat(req.body.marchPrice.trim().replace("$", "")),
+        aprilPrice: parseFloat(req.body.aprilPrice.trim().replace("$", "")),
+        mayPrice: parseFloat(req.body.mayPrice.trim().replace("$", "")),
+        junePrice: parseFloat(req.body.junePrice.trim().replace("$", "")),
+        julyPrice: parseFloat(req.body.julyPrice.trim().replace("$", "")),
+        augustPrice: parseFloat(req.body.augustPrice.trim().replace("$", "")),
+        septemberPrice: parseFloat(req.body.septemberPrice.trim().replace("$", "")),
+        octoberPrice: parseFloat(req.body.octoberPrice.trim().replace("$", "")),
+        novemberPrice: parseFloat(req.body.novemberPrice.trim().replace("$", "")),
+        decemberPrice: parseFloat(req.body.decemberPrice.trim().replace("$", "")),
         additionalInformation: req.body.additionalInformation
     };
 
@@ -268,7 +337,10 @@ export const postUpdateApartmentAvailability = async (req: Request, res: Respons
     const firstDate = new Date(dateOneString);
     const secondDate = new Date(dateTwoString);
     if(firstDate.getTime() > secondDate.getTime()) {
-        return next("Looks like your first date is greater than your second date. Hit the back button and try again.");
+        const errorBody = "Your first date (" + firstDate.toDateString() + ") is greater than your second date (" + secondDate.toDateString() + "). Hit the back button and try again.";
+        return res.render("error", {
+            errorBody: errorBody
+        });
     }
 
     const dates: Date[]  = getDates(firstDate, secondDate);
@@ -277,9 +349,16 @@ export const postUpdateApartmentAvailability = async (req: Request, res: Respons
         apartmentBookings.push({apartmentNumber : apartmentNumber, eveningBooked: dates[i]});
     } 
     ApartmentBookings.create(apartmentBookings, function (err: any, bookings: any) {
-        if (err) { return next("Looks like you tried to book a day that was already booked. It's not a problem - just hit the back button."); }
+        if (err) {
+            if (err.code === 11000) { // If unique index already exists err = MongoError: E11000 duplicate
+                req.flash("errors", { msg: "Warning: You tried to book a day that was already booked." });
+                return res.redirect("/account/update-availability/" + apartmentNumber);
+            } else {
+                return next(err);
+            }
+        }
         return res.render("apartment/bookedDays", {
-            title: "The following evenings have been booked:",
+            title: "The Following Evenings Have Been Booked:",
             bookings: bookings
         });
     });
@@ -311,7 +390,10 @@ export const postUnUpdateApartmentAvailability = async (req: Request, res: Respo
     const firstDate = new Date(dateOneString);
     const secondDate = new Date(dateTwoString);
     if(firstDate.getTime() > secondDate.getTime()) {
-        return next("Looks like your first date is greater than your second date. Hit the back button and try again.");
+        const errorBody = "Your first date (" + firstDate.toDateString() + ") is greater than your second date (" + secondDate.toDateString() + "). Hit the back button and try again.";
+        return res.render("error", {
+            errorBody: errorBody
+        });
     }
 
     const dates: Date[]  = getDates(firstDate, secondDate);
@@ -319,7 +401,7 @@ export const postUnUpdateApartmentAvailability = async (req: Request, res: Respo
     ApartmentBookings.deleteMany({ apartmentNumber : apartmentNumber, eveningBooked: { $in: dates} }, function(err: any) {
         if (err) { return next(err); }
         return res.render("apartment/unbookedDays", {
-            title: "The following evenings have been unbooked:",
+            title: "The Following Evenings Have Been Unbooked:",
             bookings: dates
         });
     });
@@ -406,6 +488,7 @@ export const getCreateApartment = (req: Request, res: Response) => {
             apartmentNumber: 0,
             numBedrooms: 0,
             numBathrooms: 0,
+            // TODO - change this to direct link to instructions.
             photosFolder: "https://drive.google.com/open?id=1_QApdFQj3sT2OG8q2NCjbIz20A384auz",
             additionalInformation: "",
             januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
@@ -432,21 +515,48 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
     await check("apartmentNumber", "Apartment number must be a number.").exists().isNumeric().run(req);
     await check("numBedrooms", "Number of bedrooms must be a number.").exists().isNumeric().run(req);
     await check("numBathrooms", "Number of bathrooms must be a number.").exists().isNumeric().run(req);
-    /*
-    Prices can contain a dollar sign
-    await check("januaryPrice", "januaryPrice must be a number").isNumeric().run(req);
-    await check("februaryPrice", "februaryPrice must be a number").isNumeric().run(req);
-    await check("marchPrice", "marchPrice must be a number").isNumeric().run(req);
-    await check("aprilPrice", "aprilPrice must be a number").isNumeric().run(req);
-    await check("mayPrice", "mayPrice must be a number").isNumeric().run(req);
-    await check("junePrice", "junePrice must be a number").isNumeric().run(req);
-    await check("julyPrice", "julyPrice must be a number").isNumeric().run(req);
-    await check("augustPrice", "augustPrice must be a number").isNumeric().run(req);
-    await check("septemberPrice", "septemberPrice must be a number").isNumeric().run(req);
-    await check("octoberPrice", "octoberPrice must be a number").isNumeric().run(req);
-    await check("novemberPrice", "novemberPrice must be a number").isNumeric().run(req);
-    await check("decemberPrice", "decemberPrice must be a number").isNumeric().run(req);
-    */
+
+    await check("photosFolder", "Photos link must be a valid link.").exists().custom( (url: string) => {
+        return validateLink(url);
+    }).run(req);
+
+    await check("januaryPrice", "January's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("februaryPrice", "February's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("marchPrice", "March's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("aprilPrice", "April's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("mayPrice", "May's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("junePrice", "June's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("julyPrice", "July's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("augustPrice", "August's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("septemberPrice", "September's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("octoberPrice", "October's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("novemberPrice", "November's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+    await check("decemberPrice", "December's rent must be a number.").exists().custom( (price: string) => {
+        return validatePrice(price);
+    }).run(req);
+
     const errors = validationResult(req); // user local variable has .apartments: CoreMongoseArray(0)
 
     if (!errors.isEmpty()) { // apartment-number, april-price, etc stored in req.body
@@ -454,50 +564,33 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
         return res.redirect("/account/list-apartment");
     } // body.additional-information: "AdditionInfoRow1 111\r\nAdditionInfoRow2 222"
 
+    const user = req.user as LandlordDocument;
+
     const apartment = new Apartment({
-        apartmentNumber: 0,
-        landlordEmail: "",
-        numBedrooms: 0,
-        numBathrooms: 0,
-        photosFolder: "", // Link to photos of your apartment on Google Drive
-        januaryPrice: 0, // These don't need to be sent in - the form can just be filled with empty string.
-        februaryPrice: 0,
-        marchPrice: 0,
-        aprilPrice: 0,
-        mayPrice: 0,
-        junePrice: 0,
-        julyPrice: 0,
-        augustPrice: 0,
-        septemberPrice: 0,
-        octoberPrice: 0,
-        novemberPrice: 0,
-        decemberPrice: 0,
-        additionalInformation: "",
+        apartmentNumber: parseInt(req.body.apartmentNumber, 10),
+        landlordEmail: user.email.trim().toLowerCase(),
+        numBedrooms: parseFloat(req.body.numBedrooms.trim()),
+        numBathrooms: parseFloat(req.body.numBathrooms.trim()),
+        photosFolder: req.body.photosFolder.trim(), // Link to photos of your apartment on Google Drive
+        januaryPrice: parseFloat(req.body.januaryPrice.trim().replace("$", "")), // These don't need to be sent in - the form can just be filled with empty string.
+        februaryPrice: parseFloat(req.body.februaryPrice.trim().replace("$", "")),
+        marchPrice: parseFloat(req.body.marchPrice.trim().replace("$", "")),
+        aprilPrice: parseFloat(req.body.aprilPrice.trim().replace("$", "")),
+        mayPrice: parseFloat(req.body.mayPrice.trim().replace("$", "")),
+        junePrice: parseFloat(req.body.junePrice.trim().replace("$", "")),
+        julyPrice: parseFloat(req.body.julyPrice.trim().replace("$", "")),
+        augustPrice: parseFloat(req.body.augustPrice.trim().replace("$", "")),
+        septemberPrice: parseFloat(req.body.septemberPrice.trim().replace("$", "")),
+        octoberPrice: parseFloat(req.body.octoberPrice.trim().replace("$", "")),
+        novemberPrice: parseFloat(req.body.novemberPrice.trim().replace("$", "")),
+        decemberPrice: parseFloat(req.body.decemberPrice.trim().replace("$", "")),
+        additionalInformation: req.body.additionalInformation,
     });
 
-    const user = req.user as LandlordDocument;
-    apartment.apartmentNumber = parseInt(req.body.apartmentNumber, 10);
-    apartment.landlordEmail = user.email.toLowerCase();
-    apartment.numBedrooms = parseFloat(req.body.numBedrooms);
-    apartment.numBathrooms = parseFloat(req.body.numBathrooms);
-    apartment.photosFolder = req.body.photosFolder;
-    apartment.januaryPrice = parseFloat(req.body.januaryPrice.replace("$", ""));
-    apartment.februaryPrice = parseFloat(req.body.februaryPrice.replace("$", ""));
-    apartment.marchPrice = parseFloat(req.body.marchPrice.replace("$", ""));
-    apartment.aprilPrice = parseFloat(req.body.aprilPrice.replace("$", ""));
-    apartment.mayPrice = parseFloat(req.body.mayPrice.replace("$", ""));
-    apartment.junePrice = parseFloat(req.body.junePrice.replace("$", ""));
-    apartment.julyPrice = parseFloat(req.body.julyPrice.replace("$", ""));
-    apartment.augustPrice = parseFloat(req.body.augustPrice.replace("$", ""));
-    apartment.septemberPrice = parseFloat(req.body.septemberPrice.replace("$", ""));
-    apartment.octoberPrice = parseFloat(req.body.octoberPrice.replace("$", ""));
-    apartment.novemberPrice = parseFloat(req.body.novemberPrice.replace("$", ""));
-    apartment.decemberPrice = parseFloat(req.body.decemberPrice.replace("$", ""));
-    apartment.additionalInformation = req.body.additionalInformation;
     apartment.save((err: WriteError) => {
         if (err) {
             if (err.code === 11000) { // If apartment number already exists err = MongoError: E11000 duplicate key error collection: test.apartments index: apartmentNumber_1 dup key: { : 8 }
-                req.flash("errors", { msg: "The apartment number you have entered already exists in the database." });
+                req.flash("errors", { msg: "The apartment number you entered already exists. Try a different one or ask for that listing to be deleted." });
                 return res.redirect("/account/list-apartment");
             }
             return next(err);
