@@ -1,15 +1,15 @@
 extends ../layout
 
 block content
-  h1.text-center #{title}
+  h3.text-center #{title}
   hr
   .row
     .col-sm-6
-      h2 Edit Listing
-      p 
+      h4.text-center Edit Listing
+      p.text-center
         a(href="/account/edit-listing/" + apartmentNumber) Edit listing for apartment ##{apartmentNumber}.
 
     .col-sm-6
-      h2 Edit Availability
-      p 
+      h4.text-center Edit Availability
+      p.text-center
         a(href="/account/update-availability/" + apartmentNumber) Edit availability for apartment ##{apartmentNumber}.

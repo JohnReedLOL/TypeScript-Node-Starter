@@ -10,15 +10,15 @@ block content
 
   form.form-horizontal(action='/account/password', method='POST')
     input(type='hidden', name='_csrf', value=_csrf)
-    .form-group.row.justify-content-md-center
+    .form-group.row.justify-content-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='password') New Password
       .col-sm-7
         input.form-control(type='password', name='password', id='password')
-    .form-group.row.justify-content-md-center
+    .form-group.row.justify-content-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='confirmPassword') Confirm Password
       .col-sm-7
         input.form-control(type='password', name='confirmPassword', id='confirmPassword')
-    .form-group.row.justify-content-md-center
+    .form-group.row.justify-content-center
       .col-sm-4
         button.btn.btn-primary(type='submit')
           i.fa.fa-lock
@@ -30,7 +30,7 @@ block content
     h4.text-center Delete Account
 
   form.form-horizontal(action='/account/delete', method='POST')
-    .form-group.row.justify-content-md-center
+    .form-group.row.justify-content-center
       p.offset-sm-3.col-sm-7 You can delete your account, but keep in mind this action is irreversible.
       p.offset-sm-3.col-sm-7 All apartments under your email will also be deleted, as will the bookings under those apartments.
       input(type='hidden', name='_csrf', value=_csrf)

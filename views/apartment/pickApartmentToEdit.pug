@@ -5,7 +5,8 @@ block content
     h3.text-center #{title}
     hr
 
-  ul
-    each apartment in apartments
-        li
-            a(href="/account/update-listing/" + apartment.apartmentNumber) Apartment #{apartment.apartmentNumber}
+  .row.justify-content-center
+    ul
+      each apartment in apartments
+          li
+              a(href="/account/update-listing/" + apartment.apartmentNumber) Apartment #{apartment.apartmentNumber}
