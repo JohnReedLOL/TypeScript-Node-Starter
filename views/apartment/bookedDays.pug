@@ -6,6 +6,6 @@ block content
     hr
 
   ul
-    each booking in bookings
+    each dayBooked in daysBooked
         li
-            p #{booking.eveningBooked.toDateString()}
+            p #{dayBooked.toDateString()}
