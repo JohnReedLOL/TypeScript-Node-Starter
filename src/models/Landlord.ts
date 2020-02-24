@@ -9,7 +9,7 @@ export type LandlordDocument = mongoose.Document & {
     passwordResetExpires: Date;
 
     tokens: AuthToken[];
-    apartments: Apartment[];
+    apartments: ApartmentType[];
 
     profile: {
         name: string;
@@ -30,7 +30,7 @@ export interface AuthToken {
     kind: string;
 }
 
-export interface Apartment { // Note this overlaps with Apartment in Apartments.ts
+export interface ApartmentType {
     apartmentNumber: number;
 }
 

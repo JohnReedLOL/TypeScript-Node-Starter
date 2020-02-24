@@ -4,7 +4,7 @@ import async from "async";
 import crypto from "crypto";
 import nodemailer from "nodemailer";
 import passport from "passport";
-import { Landlord, LandlordDocument, AuthToken } from "../models/Landlord";
+import { ApartmentType, Landlord, LandlordDocument, AuthToken } from "../models/Landlord";
 import { Apartment, ApartmentDocument } from "../models/Apartment";
 import { ApartmentBookings, ApartmentBookingsDocument } from "../models/ApartmentBookings";
 import { Request, Response, NextFunction } from "express";
@@ -125,8 +125,18 @@ export const postSignup = async (req: Request, res: Response, next: NextFunction
  * Profile page.
  */
 export const getAccount = (req: Request, res: Response) => {
+    const user = req.user as LandlordDocument;
+    let apartments: ApartmentType[] = user.apartments;
+    if(typeof apartments != "undefined" && apartments != null) {
+        // it's good
+    } else {
+        // Set it to empty array
+        apartments = [];
+    }
+    const listings: number[]  = apartments.map( (apartment: ApartmentType) => apartment.apartmentNumber );
     res.render("account/profile", {
-        title: "Account Management"
+        title: "Landlord's Account Page",
+        listings: listings
     });
 };
 

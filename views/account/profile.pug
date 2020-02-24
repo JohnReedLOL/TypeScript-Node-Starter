@@ -2,8 +2,19 @@ extends ../layout
 
 block content
   .page-header
-    h3.text-center Landlord's Account Page
+    h3.text-center #{title}
     hr
+
+  .page-header
+    h4.text-center My Listings:
+
+  .row.justify-content-center
+    ul
+      each apartmentNumber in listings
+          li
+              a(href="/apartment/" + apartmentNumber) Apartment #{apartmentNumber}
+
+  hr
 
   .page-header
     h4.text-center Change Password
