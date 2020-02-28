@@ -91,6 +91,15 @@ const validatePrice = (price: string) => {
     return true;
 };
 
+const validateHttpOrHttps = (link: string) => {
+    const lowercaseLink = link.trim().toLowerCase();
+    if(lowercaseLink.startsWith("http") || lowercaseLink.startsWith("https") ) {
+        return true;
+    } else {
+        return false;
+    }
+};
+
 // Make sure the link contains a dot.
 const validateLink = (link: string) => {
     const linkTrimmed = link.trim();
@@ -208,6 +217,9 @@ export const postUpdateApartmentListing = async (req: Request, res: Response, ne
 
     await check("photosFolder", "Photos link must be a valid link.").exists().custom( (url: string) => {
         return validateLink(url);
+    }).run(req);
+    await check("photosFolder", "Photos link must start with \"http\" or \"https\".").exists().custom( (url: string) => {
+        return validateHttpOrHttps(url);
     }).run(req);
 
     await check("januaryPrice", "January's rent must be a number.").exists().custom( (price: string) => {
@@ -521,6 +533,9 @@ export const postCreateApartment = async (req: Request, res: Response, next: Nex
 
     await check("photosFolder", "Photos link must be a valid link.").exists().custom( (url: string) => {
         return validateLink(url);
+    }).run(req);
+    await check("photosFolder", "Photos link must start with \"http\" or \"https\".").exists().custom( (url: string) => {
+        return validateHttpOrHttps(url);
     }).run(req);
 
     await check("januaryPrice", "January's rent must be a number.").exists().custom( (price: string) => {
