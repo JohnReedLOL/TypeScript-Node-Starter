@@ -5,7 +5,8 @@ block content
     h3.text-center #{title}
     hr
 
-  ul
-    each booking in bookings
-        li
-            p #{booking.toDateString()}
+  .row.justify-content-center
+    ul
+      each booking in bookings
+          li
+              p #{booking.toDateString()}

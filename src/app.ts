@@ -105,7 +105,7 @@ app.post("/account/delete", passportConfig.isAuthenticated, userController.postD
 app.get("/account/unlink/:provider", passportConfig.isAuthenticated, userController.getOauthUnlink); // This can be deleted
 app.get("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.getCreateApartment);
 app.post("/account/list-apartment", passportConfig.isAuthenticated, apartmentController.postCreateApartment);
-app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLandlord);
+// app.get("/rent-apartment-by-landlord", apartmentController.getRentApartmentByLandlord); // This is no longer used. Just do /search-for-apartments
 app.get("/apartment/:apartmentNumber", apartmentController.getApartment);
 app.get("/account/update-listing", passportConfig.isAuthenticated, apartmentController.chooseListingToUpdate);
 app.get("/account/update-listing/:apartmentNumber", passportConfig.isAuthenticated, apartmentController.updateListing);

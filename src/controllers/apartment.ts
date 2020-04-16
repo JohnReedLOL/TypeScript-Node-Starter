@@ -471,8 +471,9 @@ export const getApartment = (req: Request, res: Response, next: NextFunction) =>
 /**
  * GET /rent-apartment-by-landlord
  * Form to fill in the landlord. If landlord is filled, list the apartments.
+ * Note: This is no longer used - just do /search-for-apartments
  */
-export const getRentApartmentByLandlord = (req: Request, res: Response, next: NextFunction) => {
+/*export const getRentApartmentByLandlord = (req: Request, res: Response, next: NextFunction) => {
     let landlord = req.query.landlord; // email address of landlord
     if(landlord == undefined) {
         res.render("apartment/getByLandlord", {
@@ -491,7 +492,7 @@ export const getRentApartmentByLandlord = (req: Request, res: Response, next: Ne
             });
         });
     }
-};
+};*/
 
 /**
  * GET /account/list-apartment

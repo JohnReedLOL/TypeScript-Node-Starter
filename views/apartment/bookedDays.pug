@@ -5,7 +5,8 @@ block content
     h3.text-center #{title}
     hr
 
-  ul
-    each dayBooked in daysBooked
-        li
-            p #{dayBooked.toDateString()}
+  .row.justify-content-center
+    ul
+      each dayBooked in daysBooked
+          li
+              p #{dayBooked.toDateString()}
