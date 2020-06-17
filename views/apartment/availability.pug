@@ -5,9 +5,9 @@ block content
   - var todaysDateObject = new Date();
   - var todaysDateString = todaysDateObject.toLocaleDateString();
   - var nextDateObjectNew = new Date(todaysDateObject.valueOf());
-  - var nextDateObject = nextDateObjectNew.setDate(nextDateObjectNew.getDate() + 5);
-  - var nextDateString = nextDateObject.toLocaleDateString();
-  
+  - nextDateObjectNew.setDate(nextDateObjectNew.getDate() + 5);
+  - var nextDateString = nextDateObjectNew.toLocaleDateString();
+
   .page-header
     h3.text-center #{title}
     hr
