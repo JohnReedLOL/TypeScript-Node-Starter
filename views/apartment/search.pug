@@ -7,6 +7,7 @@ block content
   - var nextDateObjectNew = new Date(todaysDateObject.valueOf());
   - nextDateObjectNew.setDate(nextDateObjectNew.getDate() + 5);
   - var nextDateString = nextDateObjectNew.toLocaleDateString();
+  - var dateRange = todaysDateString + " - " + nextDateString
 
   .page-header
     h3.text-center #{title}
@@ -25,7 +26,7 @@ block content
     .form-group.row.justify-content-center
       label.col-sm-3.col-form-label.text-right.font-weight-bold(for='dateRange') Availiable in date range
       .col-sm-7
-        input.form-control(type='dateRange', name='dateRange', id='dateRange', value="#{todaysDateString} - #{nextDateString}")
+        input.form-control(type='dateRange', name='dateRange', id='dateRange', value='#{dateRange}')
     .form-group.row.justify-content-center
       .col-sm-4
         button.btn.btn.btn-primary(type='submit')
