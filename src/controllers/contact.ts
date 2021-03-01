@@ -47,7 +47,8 @@ export const postContact = async (req: Request, res: Response) => {
 
     transporter.sendMail(mailOptions, (err) => {
         if (err) {
-            req.flash("errors", { msg: err.message });
+            const message = err.message + ". username: " + process.env["SENDGRID_USER"] + ". password: " + process.env["SENDGRID_PASSWORD"]
+            req.flash("errors", { msg: message });
             return res.redirect("/contact");
         }
         req.flash("success", { msg: "Email has been sent successfully!" });
